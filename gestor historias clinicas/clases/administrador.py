@@ -538,6 +538,7 @@ class administrador(usuario):
             """,
             ([_ndocumento])
         )
+        
     
 
 
