@@ -1,0 +1,10 @@
+rol,nro_documento,tipo_documento,nombre,apellidos,fecha_nacimiento,ciudad,departamento,direccion,numero_cel,telefono,especialidad,razon_social
+paciente,11441089,cc,camilo,hernandez,1999-09-22,cali,valle del cauca,cra83,3225420,5555623,,
+paciente,11551563,cc,luis,oviedo,1999-02-13,cali,valle del cauca,cll55,3553489,4368261,,
+doctor,14663952,cc,andres,salazar,1998-04-12,bogota,cundinamarca,cra44,6542820,4237296,general,
+doctor,66627402,cc,natalia,sandoval,1986-10-20,medellin,antioquia,cll33,3227512,7943671,urologo,
+enfermero,16001462,cc,camila,acevedo,1975-06-04,bogota,cundinamarca,cra1,5552011,4924105,,
+recepcionista,58952341,cc,julian,paredes,1998-07-25,cali,valle del cauca,cra10,9173411,4417224,,
+administrador,54335671,cc,felipe,lopez,1984-02-11,barranquilla,atlantico,cll89,8761830,1408337,,
+empresa,123456,nit,babaria,,,,,cll22,,6539250,,23
+enfermero,26920048,cc,antonio,valanta,1991-12-24,cali,valla del cauca,cra5,3525890,1099432,,
