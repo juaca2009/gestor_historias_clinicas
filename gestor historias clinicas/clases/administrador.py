@@ -659,6 +659,13 @@ class administrador(usuario):
         )
         for i in temp:
             cola = i.nro_cola 
+        temp = usuario.get_base(self).execute(
+            """
+            delete from asignacion_consultas 
+            where nro_documento = %s
+            """,
+            ([_ndocumento])
+        )
 
         temp = usuario.get_base(self).execute(
             """
