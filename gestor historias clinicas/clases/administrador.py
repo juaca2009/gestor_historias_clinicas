@@ -637,6 +637,7 @@ class administrador(usuario):
 
 
     def eliminar_doctor(self, _ndocumento):
+        cola = None
         temp = usuario.get_base(self).execute(
             """
             delete from rol_usuario where rol = 'doctor' and nro_documento = %s
@@ -649,8 +650,31 @@ class administrador(usuario):
             """,
             ([_ndocumento])
         )
+        temp = usuario.get_base(self).execute(
+            """
+            select * from asignacion_consultas 
+            where nro_documento = %s
+            """,
+            ([_ndocumento])
+        )
+        for i in temp:
+            cola = i.nro_cola 
 
-
+        temp = usuario.get_base(self).execute(
+            """
+            select * from colas_consultas where nro_cola = %s
+            """,
+            ([cola])
+        )
+        for i in temp:
+            de = usuario.get_base(self).execute(
+                """
+                update colas_consultas
+                set   nombre_doctor = None, apellido_doctor = None
+                where nro_cola = %s and nro_documento = %s
+                """,
+                (cola, i.nro_documento)
+            )
 
 
     def eliminar_empresa(self, _ndocumento):
@@ -670,10 +694,10 @@ class administrador(usuario):
 
 
 
-a = gestor_bd('historias_clinicas')
-a.conectar_bd()
-b = administrador("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313)
-b.cambiar_examen(16001462, 'urodinamia')
+# a = gestor_bd('historias_clinicas')
+# a.conectar_bd()
+# b = administrador("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313)
+# b.cambiar_examen(16001462, 'urodinamia')
 
 
 
