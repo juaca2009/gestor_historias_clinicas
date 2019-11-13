@@ -586,6 +586,7 @@ class administrador(usuario):
 
 
     def eliminar_enfermero(self, _ndocumento):
+        cola = None
         temp = usuario.get_base(self).execute(
             """
             delete from rol_usuario where rol = 'enfermero' and nro_documento = %s
@@ -598,6 +599,39 @@ class administrador(usuario):
             """,
             ([_ndocumento])
         )
+
+        temp = usuario.get_base(self).execute(
+            """
+            select * from asignacion_examenes
+            """
+        )
+        for i in temp:
+            if i.id_enfermero == _ndocumento:
+                de = usuario.get_base(self).execute(
+                    """
+                    update asignacion_examenes
+                    set id_enfermero = None, apellido = None, nombre = None
+                    where tipo_examen = %s
+                    """,
+                    ([i.tipo_examen])
+                )
+                cola = i.nro_cola
+                break
+        temp = usuario.get_base(self).execute(
+            """
+            select * from colas_examenes where nro_cola = %s
+            """,
+            ([cola])
+        )
+        for i in temp:
+            de = usuario.get_base(self).execute(
+                """
+                update colas_examenes 
+                set   nombre_enfermero = None, apellido_enfermero = None
+                where nro_cola = %s and nro_documento = %s
+                """,
+                (cola, i.nro_documento)
+            )
 
 
 
