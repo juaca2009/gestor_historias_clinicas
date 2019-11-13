@@ -538,7 +538,32 @@ class administrador(usuario):
             """,
             ([_ndocumento])
         )
-        
+        temp = usuario.get_base(self).execute(
+            """
+            select * from colas_consultas
+            """
+        )
+        for i in temp:
+            if i.nro_documento == _ndocumento:
+                de = usuario.get_base(self).execute(
+                    """
+                    delete from  colas_consultas where nro_cola = %s and nro_documento = %s
+                    """,
+                    (i.nro_cola, _ndocumento)
+                )
+        temp = usuario.get_base(self).execute(
+            """
+            select * from colas_examenes
+            """
+        )
+        for i in temp:
+            if i.nro_documento == _ndocumento:
+                de = usuario.get_base(self).execute(
+                    """
+                    delete from  colas_examenes where nro_cola = %s and nro_documento = %s
+                    """,
+                    (i.nro_cola, _ndocumento)
+                )
     
 
 
