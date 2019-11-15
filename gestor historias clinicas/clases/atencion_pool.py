@@ -9,9 +9,10 @@ class atencion_pool(object):
     __instancia = None
     __atenciones = list()
 
-    def __new__(self):
+    def __new__(self, _base):
         if not self.__instancia:
             self.__instancia = super(atencion_pool, self).__new__(self)
+            self.__base = _base
         return self.__instancia
 
     def get_elemento(self):
@@ -21,21 +22,41 @@ class atencion_pool(object):
             return None
     
     def retornar_elemento(self, elemento):
-        if self.__rol == "doctor":
-            elemento.reiniciar_consulta()
-        elif self.__rol == "enfermero":
-            elemento.reiniciar_examen()
-        self.__atenciones.append(elemento)
+       pass
 
-    def crear_examen(self, _base, _fecha, _esatado, _documento, _nombrep, _apellidop, _tipox):
-        return examen(_base, _fecha, _esatado, _documento, _nombrep, _apellidop, _tipox)
+    def crear_examen(self, _base, _posicion, _documento, _nombrep, _apellidop, _tipox):
+        return examen(_base, _posicion, _documento, _nombrep, _apellidop, _tipox)
 
-    def crear_consulta(self, _base, _fecha, _esatado, _documento, _nombrep, _apellidop,
+    def crear_consulta(self, _base, _posicion, _documento, _nombrep, _apellidop,
                        _especializacion, _nombred, _apellidod, _documentod):
 
-        return consulta(_base, _fecha, _esatado, _documento, _nombrep, _apellidop,
+        return consulta(_base, _posicion, _documento, _nombrep, _apellidop,
                         _especializacion, _nombred, _apellidod, _documentod)
 
+    def organizar_atenciones(self):
+        cont1 = 0
+        cont2 = 0
+        max1 = len(self.__atenciones)
+        max2 = len(self.__atenciones) - 1
+        while cont1 < max1:
+            while cont2 < max2:
+                temp1 = self.__atenciones[cont2]
+                temp2 = self.__atenciones[cont2+1]
+                if temp1.get_posicion() > temp2.get_posicion():
+                    self.__atenciones[cont2] = temp2
+                    self.__atenciones[cont2+1] = temp1
+
+    def cargar_examenes(self, _nro_cola):
+        temp = self.__base.execute(
+            """
+            select * from colas_examenes where nro_cola = %s
+            """,
+            ([_nro_cola])
+        )
+        for i in temp:
+            if i.posicion != None:
+                self.__atenciones.append(self.crear_examen(self.__base,i._posicion, i.nro_documento,i.nombre_paciente, i.apellido_paciente, i.tipo_examen))
+        self.organizar_atenciones()
 
 # a = gestor_bd('historias_clinicas')
 # a.conectar_bd()
