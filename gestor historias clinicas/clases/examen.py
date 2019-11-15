@@ -4,8 +4,8 @@ from datetime import date
 from cassandra.cluster import Cluster
 
 class examen(atencion):
-    def __init__(self, _base, _fecha, _posicion, _documento, _nombrep, _apellidop, _tipox):
-        atencion.__init__(self, _base, _fecha, _posicion, _documento, _nombrep, _apellidop)
+    def __init__(self, _base, _posicion, _documento, _nombrep, _apellidop, _tipox):
+        atencion.__init__(self, _base, _posicion, _documento, _nombrep, _apellidop)
         self.__resultados = None
         self.__tipo_examen = _tipox
 
