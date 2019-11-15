@@ -2,10 +2,10 @@ from gestor_bd import gestor_bd
 from cassandra.cluster import Cluster
 
 class atencion(object):
-    def __init__(self, ba, fe, esta, doc, nom, ape):
+    def __init__(self, ba, fe, posicion, doc, nom, ape):
         self.__id_consulta = 0
         self.__fecha = fe
-        self.__estado = esta
+        self.__posicion = posicion
         self.__documento = doc
         self.__nombre_paciente = nom
         self.__apellido_paciente = ape
@@ -18,8 +18,8 @@ class atencion(object):
     def set_fecha(self, fec):
         self.__fecha  = fec
 
-    def set_estado(self, esta):
-        self.__estado = esta
+    def set_posicion(self, pos):
+        self.__posicion = pos
     
     def set_nombre_paciente(self, nom):
         self.__nombre_paciente = nom
@@ -42,8 +42,8 @@ class atencion(object):
     def get_fecha(self):
         return self.__fecha
     
-    def get_estado(self):
-        return self.__estado
+    def get_posicion(self):
+        return self.__posicion
 
     def get_nombre_paciente(self):
         return self.__nombre_paciente

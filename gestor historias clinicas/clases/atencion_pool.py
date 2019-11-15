@@ -9,17 +9,10 @@ class atencion_pool(object):
     __instancia = None
     __atenciones = list()
 
-    def __new__(self, rol):
+    def __new__(self):
         if not self.__instancia:
             self.__instancia = super(atencion_pool, self).__new__(self)
-            self.__rol = rol
         return self.__instancia
-
-    def set_rol(self, rol):
-        self.__rol = rol
-
-    def get_rol(self):
-        return self.__rol
 
     def get_elemento(self):
         if len(self.__atenciones) > 0:

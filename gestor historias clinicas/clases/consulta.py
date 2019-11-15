@@ -4,9 +4,9 @@ from datetime import date
 from cassandra.cluster import Cluster
 
 class consulta(atencion):
-    def __init__(self, _base, _fecha, _esatado, _documento, _nombrep, _apellidop,
+    def __init__(self, _base, _fecha, _posicion, _documento, _nombrep, _apellidop,
                  _especializacion, _nombred, _apellidod, _documentod):
-        atencion.__init__(self, _base, _fecha, _esatado, _documento, _nombrep, _apellidop)
+        atencion.__init__(self, _base, _fecha, _posicion, _documento, _nombrep, _apellidop)
         self.__especializacion =_especializacion
         self.__nombre_doctor = _nombred
         self.__apellido_doctor = _apellidod
