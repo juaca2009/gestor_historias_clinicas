@@ -6,6 +6,7 @@ from random import randint
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from datetime import date
 
 class administrador(usuario):
     def __init__(self, _correo, _contra, _base, _nombre, _apellido, _fechan, _ciudad, _direccion, _documento):
@@ -20,13 +21,13 @@ class administrador(usuario):
             """
             insert into rol_usuario(rol, nro_documento, apellidos, ciudad, direccion, 
             fecha_nacimiento, nombre, telefono, tipo_documento)
-            values ("paciente", %s, %s, %s, %s, %s, %s, %s, %s)
+            values ('paciente', %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (_ndocumento, _apellido, _ciudad, _direccion, _fechan, _nombre, _ntelefono, _tdocumento)
         )
         contra_temp = self.crear_contrasena()
         self.enviar_contrasena(_correo, contra_temp)
-        self.insertar_login(_correo, contra_temp, _ndocumento, "paciente")
+        self.insertar_login(_correo, contra_temp, _ndocumento, 'paciente')
 
 
 
@@ -37,7 +38,7 @@ class administrador(usuario):
             """
             insert into rol_usuario(rol, nro_documento, apellidos, ciudad, direccion, 
             fecha_nacimiento, nombre, telefono, tipo_documento)
-            values ("recepcionista", %s, %s, %s, %s, %s, %s, %s, %s)
+            values ('recepcionista', %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (_ndocumento, _apellido, _ciudad, _direccion, _fechan, _nombre, _ntelefono, _tdocumento)
         )
@@ -54,7 +55,7 @@ class administrador(usuario):
             """
             insert into rol_usuario(rol, nro_documento, apellidos, ciudad, direccion, 
             fecha_nacimiento, nombre, telefono, tipo_documento)
-            values ("enfermero", %s, %s, %s, %s, %s, %s, %s, %s)
+            values ('enfermero', %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (_ndocumento, _apellido, _ciudad, _direccion, _fechan, _nombre, _ntelefono, _tdocumento)
         )
@@ -66,19 +67,19 @@ class administrador(usuario):
 
 
     def agregar_doctor(self,  _nombre, _apellido, _fechan, _ciudad, _direccion, 
-                       _tdocumento, _ndocumento, _ntelefono, _correo, _tipo_examen, _celular, _especialidad):
+                       _tdocumento, _ndocumento, _ntelefono, _correo,  _celular, _especialidad):
 
         temp = usuario.get_base(self).execute(
             """
             insert into rol_usuario(rol, nro_documento, apellidos, ciudad, direccion, 
-            especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
-            values ("doctor", %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
+            values ('doctor', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (_ndocumento, _apellido, _ciudad, _direccion, _especialidad, _fechan, _nombre, _celular, _ntelefono, _tdocumento)
         )
         contra_temp = self.crear_contrasena()
         self.enviar_contrasena(_correo, contra_temp)
-        self.insertar_login(_correo, contra_temp, _ndocumento, "doctor")
+        self.insertar_login(_correo, contra_temp, _ndocumento, 'doctor')
         self.asiganar_consulta(_especialidad, _nombre, _apellido, _ndocumento)
 
 
@@ -89,13 +90,13 @@ class administrador(usuario):
             """
             insert into rol_usuario(rol, nro_documento, ciudad, direccion, 
             nombre, telefono, tipo_documento)
-            values ("empresa", %s, %s, %s, %s, %s, %s)
+            values ('empresa', %s, %s, %s, %s, %s, %s)
             """,
             (_ndocumento, _ciudad, _direccion, _nombre, _ntelefono, _tdocumento)
         )
         contra_temp = self.crear_contrasena()
         self.enviar_contrasena(_correo, contra_temp)
-        self.insertar_login(_correo, contra_temp, _ndocumento, "empresa")
+        self.insertar_login(_correo, contra_temp, _ndocumento, 'empresa')
 
 
 
@@ -166,7 +167,7 @@ class administrador(usuario):
             insert into asignacion_consultas(nro_documento, apellido_doctor, especialidad, nombre_doctor, nro_cola)
             values (%s, %s, %s, %s, %s)
             """,
-            (_tipo_examen, _apellidoe, _documento, _nombree, _cola, self.aumentar_consulta())
+            (_documento, _apellidoe, _especialidad, _nombree, self.aumentar_consulta())
         )
 
 
@@ -704,7 +705,7 @@ class administrador(usuario):
 # a = gestor_bd('historias_clinicas')
 # a.conectar_bd()
 # b = administrador("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313)
-# b.cambiar_examen(16001462, 'urodinamia')
+# b.agregar_doctor('calors', 'hernandez',  date(1985, 6, 6), 'cali', 'cra83c', 'cedula', 99495935, 1231231, 'medicojaverianacali@gmail.com', 12323467, 'general')
 
 
 
