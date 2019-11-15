@@ -5,12 +5,11 @@ from cassandra.cluster import Cluster
 
 class consulta(atencion):
     def __init__(self, _base, _posicion, _documento, _nombrep, _apellidop,
-                 _especializacion, _nombred, _apellidod, _documentod):
+                 _especializacion, _nombred, _apellidod):
         atencion.__init__(self, _base, _posicion, _documento, _nombrep, _apellidop)
         self.__especializacion =_especializacion
         self.__nombre_doctor = _nombred
         self.__apellido_doctor = _apellidod
-        self.__documento_doctor =  _documentod
         self.__comentario = None
     
     def get_especializacion(self):
@@ -21,10 +20,7 @@ class consulta(atencion):
 
     def get_apellido_doctor(self):
         return self.__apellido_doctor
-
-    def get_documento_doctor(self):
-        return self.__documento_doctor
-
+        
     def get_comentario(self):
         return self.__comentario
 
