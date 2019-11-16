@@ -19,13 +19,16 @@ class atencion_pool(object):
         return self.__atenciones
     
     def crear_examen(self, _base, _posicion, _documento, _nombrep, _apellidop, _tipox):
-        return examen(_base, _posicion, _documento, _nombrep, _apellidop, _tipox)
+        ex = examen(_base, _posicion, _documento, _nombrep, _apellidop, _tipox)
+        ex.obtener_historia_clinina()
+        return ex
 
     def crear_consulta(self, _base, _posicion, _documento, _nombrep, _apellidop,
                        _especializacion, _nombred, _apellidod):
-
-        return consulta(_base, _posicion, _documento, _nombrep, _apellidop,
+        cons = consulta(_base, _posicion, _documento, _nombrep, _apellidop,
                         _especializacion, _nombred, _apellidod)
+        cons.obtener_historia_clinina()
+        return cons
 
     def organizar_atenciones(self):
         cont1 = 0
