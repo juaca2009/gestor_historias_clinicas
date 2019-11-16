@@ -79,7 +79,7 @@ class empresa(usuario):
         else:
             return maxc + 1
     
-     def aumentar_posicion_examen(self, _nro_cola):
+    def aumentar_posicion_examen(self, _nro_cola):
         maxc = None
         temp = usuario.get_base(self).execute(
             """
@@ -139,7 +139,7 @@ class empresa(usuario):
             """
         )
         for i in temp:
-            if i._tipo_examen == _tipo_examen:
+            if i.tipo_examen == _tipo_examen:
                 espec = i.especializacion
         temp = usuario.get_base(self).execute(
             """
@@ -162,7 +162,7 @@ class empresa(usuario):
         self.agendar_consulta_parcial(espec, _ndocumento, _nombrep, _apellidop)
 
     def agendar_consulta_parcial(self, _especialidad, _ndocumento, _nombrep, _apellidop):
-         medicos = list()
+        medicos = list()
         temp = usuario.get_base(self).execute(
             """
             select nombre_doctor, apellido_doctor, especialidad, nro_cola from asignacion_consultas 
@@ -197,3 +197,7 @@ class empresa(usuario):
                 (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, None)
             )
         
+# a = gestor_bd('historias_clinicas')
+# a.conectar_bd()
+# b = empresa("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313)
+# b.agendar_examen('endoscopia' ,11441089, 'camilon', 'hernandez')
