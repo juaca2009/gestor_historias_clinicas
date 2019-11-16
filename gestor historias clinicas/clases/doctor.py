@@ -223,27 +223,39 @@ class doctor(usuario):
                 dic['apellido'] = i.apellido_doctor
                 dic['nro_cola'] = i.nro_cola
                 medicos.append(dic)
-        if len(medicos) == 1:
-            mec = medicos[0]
-            temp = usuario.get_base(self).execute(
-                """
-                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
-                especialidad, nombre_doctor, nombre_paciente, posicion)
-                values (%s, %s, %s, %s, %s, %s, %s, %s)
-                """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, _especialidad, mec['nombre'], _nombrep, None)
-            )
-        else:
-            num = randint(0,len(medicos)-1)
-            mec = medicos[num]
-            temp = usuario.get_base(self).execute(
-                """
-                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
-                especialidad, nombre_doctor, nombre_paciente, posicion)
-                values (%s, %s, %s, %s, %s, %s, %s, %s)
-                """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, None)
-            )
+        if self.verificar_paciente(_especialidad, _ndocumento) == 0:
+            if len(medicos) == 1:
+                mec = medicos[0]
+                temp = usuario.get_base(self).execute(
+                    """
+                    insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                    especialidad, nombre_doctor, nombre_paciente, posicion)
+                    values (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, _especialidad, mec['nombre'], _nombrep, None)
+                )
+            else:
+                num = randint(0,len(medicos)-1)
+                mec = medicos[num]
+                temp = usuario.get_base(self).execute(
+                    """
+                    insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                    especialidad, nombre_doctor, nombre_paciente, posicion)
+                    values (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, None)
+                )
+
+    def verificar_paciente(self, _especialidad, _ndocumento):
+        temp = usuario.get_base(self).execute(
+            """
+            select * from colas_consultas
+            """
+        )
+        for i in temp:
+            if _ndocumento == i.nro_documento and _especialidad == i.especialidad:
+                return 1
+        return 0
 
 # a = gestor_bd('historias_clinicas')
 # a.conectar_bd()
