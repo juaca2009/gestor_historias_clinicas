@@ -160,19 +160,103 @@ class doctor(usuario):
     def ingresar_comentarios(self, _comentario):
         self.__consulta.set_comentario(_comentario)
 
+    def aumentar_posicion_examen(self, _nro_cola):
+        maxc = None
+        temp = usuario.get_base(self).execute(
+            """
+            select max(posicion) from colas_examenes where nro_cola = %s
+            """,
+            ([_nro_cola])
+        )
+        for i in temp:
+            maxc = i[0]
+        if maxc == None:
+            return 1
+        else:
+            return maxc + 1
 
-a = gestor_bd('historias_clinicas')
-a.conectar_bd()
-c = atencion_pool(a.get_sesion())
-c.cargar_consultas(1)
-b = doctor("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313, 'general', 1, c)
-bo = False
-while bo == False:
-    if b.llamar_paciente() == 1:
-        bo = True
-print(b.obtener_historia_clinicas())
-b.ingresar_comentarios('primera consulta con el medico general')
-b.despachar_paciente()
+
+    def agendar_examen(self, _tipo_examen, _apellidop):
+        espec = None
+        enf = {'nombre': None, 'apellido': None, 'cola': None}
+        temp = usuario.get_base(self).execute(
+            """
+            select * from especializacion_examenes
+            """
+        )
+        for i in temp:
+            if i.tipo_examen == _tipo_examen:
+                espec = i.especializacion
+        temp = usuario.get_base(self).execute(
+            """
+            select nro_cola, apellido, nombre from asignacion_examenes where tipo_examen = %s
+            """,
+            ([_tipo_examen])
+        )
+        for i in temp:
+            enf['nombre'] = i.nombre
+            enf['apellido'] = i.apellido
+            enf['cola'] = i.nro_cola
+        temp = usuario.get_base(self).execute(
+            """
+            insert into colas_examenes(nro_cola, nro_documento, apellido_enfermero, 
+            apellido_paciente, nombre_enfermero, nombre_paciente, posicion, tipo_examen)
+            values (%s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (enf['cola'], self.__consulta.get_documento(), enf['apellido'], self.__consulta.get_apellido_paciente(), enf['nombre'], self.__consulta.get_nombre_paciente(), self.aumentar_posicion_examen(enf['cola']), _tipo_examen)
+        )
+        self.agendar_consulta_parcial(espec, self.__consulta.get_documento(), self.__consulta.get_nombre_paciente(), self.__consulta.get_apellido_paciente())
+
+
+
+    def agendar_consulta_parcial(self, _especialidad, _ndocumento, _nombrep, _apellidop):
+        medicos = list()
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre_doctor, apellido_doctor, especialidad, nro_cola from asignacion_consultas 
+            """
+        )
+        for i in temp:
+            dic = {'nombre': None, 'apellido': None, 'nro_cola': None}
+            if i.especialidad == _especialidad:
+                dic['nombre'] = i.nombre_doctor
+                dic['apellido'] = i.apellido_doctor
+                dic['nro_cola'] = i.nro_cola
+                medicos.append(dic)
+        if len(medicos) == 1:
+            mec = medicos[0]
+            temp = usuario.get_base(self).execute(
+                """
+                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                especialidad, nombre_doctor, nombre_paciente, posicion)
+                values (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, _especialidad, mec['nombre'], _nombrep, None)
+            )
+        else:
+            num = randint(0,len(medicos)-1)
+            mec = medicos[num]
+            temp = usuario.get_base(self).execute(
+                """
+                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                especialidad, nombre_doctor, nombre_paciente, posicion)
+                values (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, None)
+            )
+
+# a = gestor_bd('historias_clinicas')
+# a.conectar_bd()
+# c = atencion_pool(a.get_sesion())
+# c.cargar_consultas(1)
+# b = doctor("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313, 'general', 1, c)
+# bo = False
+# while bo == False:
+#     if b.llamar_paciente() == 1:
+#         bo = True
+# print(b.obtener_historia_clinicas())
+# b.ingresar_comentarios('primera consulta con el medico general')
+# b.despachar_paciente()
 
 
 
