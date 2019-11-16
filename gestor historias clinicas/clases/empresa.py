@@ -64,11 +64,26 @@ class empresa(usuario):
         self.enviar_contrasena(_correo, contra_temp)
         self.insertar_login(_correo, contra_temp, _ndocumento, 'paciente')
 
-    def aumentar_posicion(self, _nro_cola):
+    def aumentar_posicion_consulta(self, _nro_cola):
         maxc = None
         temp = usuario.get_base(self).execute(
             """
             select max(posicion) from colas_consultas where nro_cola = %s
+            """,
+            ([_nro_cola])
+        )
+        for i in temp:
+            maxc = i[0]
+        if maxc == None:
+            return 1
+        else:
+            return maxc + 1
+    
+     def aumentar_posicion_examen(self, _nro_cola):
+        maxc = None
+        temp = usuario.get_base(self).execute(
+            """
+            select max(posicion) from colas_examenes where nro_cola = %s
             """,
             ([_nro_cola])
         )
@@ -93,7 +108,6 @@ class empresa(usuario):
                 dic['apellido'] = i.apellido_doctor
                 dic['nro_cola'] = i.nro_cola
                 medicos.append(dic)
-        print(len(medicos))
         if len(medicos) == 1:
             mec = medicos[0]
             temp = usuario.get_base(self).execute(
@@ -102,7 +116,7 @@ class empresa(usuario):
                 especialidad, nombre_doctor, nombre_paciente, posicion)
                 values (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion(mec['nro_cola']))
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion_consulta(mec['nro_cola']))
             )
         else:
             num = randint(0,len(medicos)-1)
@@ -113,7 +127,73 @@ class empresa(usuario):
                 especialidad, nombre_doctor, nombre_paciente, posicion)
                 values (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion(mec['nro_cola']))
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion_consulta(mec['nro_cola']))
             )
 
-    def agendar_examen(self, _tipo_examen, )
+    def agendar_examen(self, _tipo_examen, _ndocumento, _nombrep, _apellidop):
+        espec = None
+        enf = {'nombre': None, 'apellido': None, 'cola': None}
+        temp = usuario.get_base(self).execute(
+            """
+            select * from especializacion_examenes
+            """
+        )
+        for i in temp:
+            if i._tipo_examen == _tipo_examen:
+                espec = i.especializacion
+        temp = usuario.get_base(self).execute(
+            """
+            select nro_cola, apellido, nombre from asignacion_examenes where tipo_examen = %s
+            """,
+            ([_tipo_examen])
+        )
+        for i in temp:
+            enf['nombre'] = i.nombre
+            enf['apellido'] = i.apellido
+            enf['cola'] = i.nro_cola
+        temp = usuario.get_base(self).execute(
+            """
+            insert into colas_examenes(nro_cola, nro_documento, apellido_enfermero, 
+            apellido_paciente, nombre_enfermero, nombre_paciente, posicion, tipo_examen)
+            values (%s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (enf['cola'], _ndocumento, enf['apellido'], _apellidop, enf['nombre'], _nombrep, self.aumentar_posicion_examen(enf['cola']), _tipo_examen)
+        )
+        self.agendar_consulta_parcial(espec, _ndocumento, _nombrep, _apellidop)
+
+    def agendar_consulta_parcial(self, _especialidad, _ndocumento, _nombrep, _apellidop):
+         medicos = list()
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre_doctor, apellido_doctor, especialidad, nro_cola from asignacion_consultas 
+            """
+        )
+        for i in temp:
+            dic = {'nombre': None, 'apellido': None, 'nro_cola': None}
+            if i.especialidad == _especialidad:
+                dic['nombre'] = i.nombre_doctor
+                dic['apellido'] = i.apellido_doctor
+                dic['nro_cola'] = i.nro_cola
+                medicos.append(dic)
+        if len(medicos) == 1:
+            mec = medicos[0]
+            temp = usuario.get_base(self).execute(
+                """
+                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                especialidad, nombre_doctor, nombre_paciente, posicion)
+                values (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, _especialidad, mec['nombre'], _nombrep, None)
+            )
+        else:
+            num = randint(0,len(medicos)-1)
+            mec = medicos[num]
+            temp = usuario.get_base(self).execute(
+                """
+                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                especialidad, nombre_doctor, nombre_paciente, posicion)
+                values (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, None)
+            )
+        
