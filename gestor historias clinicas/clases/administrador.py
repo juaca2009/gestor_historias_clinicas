@@ -484,8 +484,8 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
             ([_ndocumento])
         )
         for i in temp:
-            nombret = i.nombre
-            apellidot = i.apellidos
+                nombret = i.nombre
+                apellidot = i.apellidos
         temp = usuario.get_base(self).execute(
             """
             select count(nro_documento) from rol_usuario where rol = 'enfermero'
@@ -505,11 +505,11 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
             self.cambiar_examenesi(_ndocumento, _examen, nombret, apellidot)
         elif exa < enf:
             self.cambiar_examenesme(_ndocumento, _examen, nombret, apellidot)
-        else:
+        else:           
             self.cambiar_examenesma(_ndocumento, _examen, nombret, apellidot)
         
 
-
+           
 
 
 
@@ -705,8 +705,7 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
 # a = gestor_bd('historias_clinicas')
 # a.conectar_bd()
 # b = administrador("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313)
-# b.agregar_doctor('calors', 'hernandez',  date(1985, 6, 6), 'cali', 'cra83c', 'cedula', 99495935, 1231231, 'medicojaverianacali@gmail.com', 12323467, 'general')
-
+# b.cambiar_examen(26920048, 'endoscopia')
 
 
 
