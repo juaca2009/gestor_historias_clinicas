@@ -15,11 +15,8 @@ class atencion_pool(object):
             self.__base = _base
         return self.__instancia
 
-    def get_elemento(self):
-        if len(self.__atenciones) > 0:
-            return self.__atenciones.pop(0)
-        else:
-            return None
+    def get_atenciones(self):
+        return self.__atenciones
     
     def crear_examen(self, _base, _posicion, _documento, _nombrep, _apellidop, _tipox):
         return examen(_base, _posicion, _documento, _nombrep, _apellidop, _tipox)
@@ -42,6 +39,8 @@ class atencion_pool(object):
                 if temp1.get_posicion() > temp2.get_posicion():
                     self.__atenciones[cont2] = temp2
                     self.__atenciones[cont2+1] = temp1
+                cont2 = cont2 + 1
+            cont1 = cont1 + 1
 
     def cargar_examenes(self, _nro_cola):
         temp = self.__base.execute(
@@ -52,7 +51,7 @@ class atencion_pool(object):
         )
         for i in temp:
             if i.posicion != None:
-                self.__atenciones.append(self.crear_examen(self.__base,i._posicion, i.nro_documento,i.nombre_paciente, i.apellido_paciente, i.tipo_examen))
+                self.__atenciones.append(self.crear_examen(self.__base,i.posicion, i.nro_documento,i.nombre_paciente, i.apellido_paciente, i.tipo_examen))
         self.organizar_atenciones()
 
     def cargar_consultas(self, _nro_cola):
@@ -72,18 +71,12 @@ class atencion_pool(object):
 
 # a = gestor_bd('historias_clinicas')
 # a.conectar_bd()
-# b = atencion_pool("enfermero")
-# ex = b.get_elemento()
-# if ex == None:
-#     print("sin examenes, creando uno")
-#     ex = b.crear_examen(a.get_sesion(), date.today(), 0, 12234, "cami", "hernan", "endoscopia")
-# print(ex.get_apellido_paciente())
+# b = atencion_pool(a.get_sesion())
+# b.cargar_consultas(1)
+# c = b.get_atenciones()
+# con = 0
+# while con < len(c):
+#     d = c[con]
+#     print(d.get_posicion())
+#     con = con + 1
 
-# b.retornar_elemento(ex)
-
-# ex = b.get_elemento()
-# if ex == None:
-#     print("sin examenes, creando uno")
-# print("dando elemento")
-
-# print(ex.get_apellido_paciente())
