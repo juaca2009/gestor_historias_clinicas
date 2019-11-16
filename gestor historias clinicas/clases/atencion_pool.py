@@ -68,6 +68,9 @@ class atencion_pool(object):
 
     def obtener_primera_posicion(self):
         return self.__atenciones[0] 
+    
+    def obtener_atencion(self, _pos):
+        return self.__atenciones[_pos]
 
 # a = gestor_bd('historias_clinicas')
 # a.conectar_bd()
