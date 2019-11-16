@@ -1,3 +1,4 @@
+# coding=UTF-8
 from gestor_bd import gestor_bd
 from cassandra.cluster import Cluster
 from usuario import usuario
@@ -62,3 +63,62 @@ class recepcionista(usuario):
         contra_temp = self.crear_contrasena()
         self.enviar_contrasena(_correo, contra_temp)
         self.insertar_login(_correo, contra_temp, _ndocumento, 'paciente')
+
+    def agendar_consulta_general(self, _ndocumento, _nombrep, _apellidop):
+        medicos = list()
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre_doctor, apellido_doctor, especialidad, nro_cola from asignacion_consultas 
+            """
+        )
+        for i in temp:
+            dic = {'nombre': None, 'apellido': None, 'nro_cola': None}
+            if i.especialidad == 'general':
+                dic['nombre'] = i.nombre_doctor
+                dic['apellido'] = i.apellido_doctor
+                dic['nro_cola'] = i.nro_cola
+                medicos.append(dic)
+        print(len(medicos))
+        if len(medicos) == 1:
+            mec = medicos[0]
+            temp = usuario.get_base(self).execute(
+                """
+                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                especialidad, nombre_doctor, nombre_paciente, posicion)
+                values (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion(mec['nro_cola']))
+            )
+        else:
+            num = randint(0,len(medicos)-1)
+            mec = medicos[num]
+            temp = usuario.get_base(self).execute(
+                """
+                insert into colas_consultas(nro_cola, nro_documento, apellido_doctor, apellido_paciente,
+                especialidad, nombre_doctor, nombre_paciente, posicion)
+                values (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion(mec['nro_cola']))
+            )
+
+
+    def aumentar_posicion(self, _nro_cola):
+        maxc = None
+        temp = usuario.get_base(self).execute(
+            """
+            select max(posicion) from colas_consultas where nro_cola = %s
+            """,
+            ([_nro_cola])
+        )
+        for i in temp:
+            maxc = i[0]
+        if maxc == None:
+            return 1
+        else:
+            return maxc + 1
+
+# a = gestor_bd('historias_clinicas')
+# a.conectar_bd()
+# b = recepcionista("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313)
+# b.agendar_consulta_general(11553463, 'luis',  'oviedo')
+        
