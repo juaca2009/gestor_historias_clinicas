@@ -1,6 +1,7 @@
 from gestor_bd import gestor_bd
 from cassandra.cluster import Cluster
 from usuario import usuario
+from atencion_pool import atencion_pool
 
 class doctor(usuario):
     def __init__(self,  _correo, _contra, _base, _nombre, _apellido,
@@ -125,6 +126,25 @@ class doctor(usuario):
         
 
 
+    def despachar_paciente(self):
+        self.__consulta.cargar_comentarios()
+        temp = usuario.get_base(self).execute(
+            """
+            select * from colas_consultas where nro_cola = %s
+            """,
+            ([self.__nro_cola])
+        )
+        for i in temp:
+            if i.posicion == 0:
+                delp = usuario.get_base(self).execute(
+                    """
+                    delete from colas_consultas where nro_cola = %s and nro_documento = %s
+                    """,
+                    (self.__nro_cola, i.nro_documento)
+                )
+                break
+        self.__obcj_pool.cargar_consultas(self.__nro_cola)
+
 
     def llamar_paciente(self):
         if(self.buscar_consultas() == 1 or self.buscar_examenes() == 1):
@@ -133,5 +153,17 @@ class doctor(usuario):
         else:
             self.atender_paciente()
             return 1
+
+    def obtener_historia_clinicas(self):
+        return self.__consulta.get_historia()
+
+    def ingresar_comentarios(self, _comentario):
+        self.__consulta.set_comentario(_comentario)
+
+
+a = gestor_bd('historias_clinicas')
+a.conectar_bd()
+c = atencion_pool(a.get_sesion())
+b = doctor("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313, 'general', 1, c)
 
         
