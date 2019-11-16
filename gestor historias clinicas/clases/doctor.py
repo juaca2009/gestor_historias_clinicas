@@ -28,14 +28,14 @@ class doctor(usuario):
 
 
     def buscar_examenes(self):
-        cons = self.obcj_pool.obtener_primera_posicion()
+        cons = self.__obcj_pool.obtener_primera_posicion()
         temp = usuario.get_base(self).execute(
             """
             select * from colas_examenes
             """
         )
         for i in temp:
-            if self.consulta.get_documento() == i.nro_documento:
+            if cons.get_documento() == i.nro_documento:
                 if(i.posicion == 0):
                     return 1
 
@@ -45,7 +45,7 @@ class doctor(usuario):
 
 
     def buscar_consultas(self):
-        cons = self.obcj_pool.obtener_primera_posicion()
+        cons = self.__obcj_pool.obtener_primera_posicion()
         temp = usuario.get_base(self).execute(
             """
             select * from colas_consultas
@@ -105,7 +105,7 @@ class doctor(usuario):
 
 
     def atender_paciente(self):
-         temp = usuario.get_base(self).execute(
+        temp = usuario.get_base(self).execute(
             """
             select * from colas_consultas where nro_cola = %s
             """,
@@ -114,13 +114,13 @@ class doctor(usuario):
         for i in temp:
             if i.posicion != None:
                 post = i.posicion - 1
-                    ac = usuario.get_base(self).execute(
-                        """
-                        update table colas_consultas set posicion = %s
-                        where nro_cola = %s and nro_documento = %s
-                        """,
-                        (post, self.__nro_cola, i.nro_documento)
-                    )
+                ac = usuario.get_base(self).execute(
+                    """
+                    update colas_consultas set posicion = %s
+                    where nro_cola = %s and nro_documento = %s
+                    """,
+                    (post, self.__nro_cola, i.nro_documento)
+                )
         self.__obcj_pool.cargar_consultas(self.__nro_cola)
         self.__consulta = self.__obcj_pool.obtener_primera_posicion()
         
@@ -164,6 +164,16 @@ class doctor(usuario):
 a = gestor_bd('historias_clinicas')
 a.conectar_bd()
 c = atencion_pool(a.get_sesion())
+c.cargar_consultas(1)
 b = doctor("aaa@gmail.com", "123", a.get_sesion(), "aaa", "bbbb", "01010", "cali", "cra83c", 1212313, 'general', 1, c)
+bo = False
+while bo == False:
+    if b.llamar_paciente() == 1:
+        bo = True
+print(b.obtener_historia_clinicas())
+b.ingresar_comentarios('primera consulta con el medico general')
+b.despachar_paciente()
+
+
 
         
