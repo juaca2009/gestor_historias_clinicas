@@ -26,3 +26,4 @@ class gestor_bd(object):
 
 
 
+
