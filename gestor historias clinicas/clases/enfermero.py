@@ -114,7 +114,8 @@ class enfermero(usuario):
         self.__consulta = self.__obcj_pool.obtener_primera_posicion()
 
 
-    def despachar_paciente(self):
+    def despachar_paciente(self, _comentario):
+        self.ingresar_comentarios(_comentario)
         self.confirmar_examen()
         self.__consulta.cargar_comentarios()
         temp = usuario.get_base(self).execute(
@@ -133,9 +134,11 @@ class enfermero(usuario):
                 )
                 break
         self.__obcj_pool.cargar_examenes(self.__nro_cola)
+        self.verificar_dependencias()
 
 
     def llamar_paciente(self):
+        self.__obcj_pool.cargar_examenes(_nro_cola)
         if(self.buscar_consultas() == 1 or self.buscar_examenes() == 1):
             self.cambiar_cola()
             return 0
@@ -144,6 +147,16 @@ class enfermero(usuario):
             return 1
 
     def obtener_historia_clinicas(self):
+        primera_vez = 'este usuario no posee historia clinica'
+        temp = self.__base.get_sesion().execute(
+            """
+            select * from paciente_historia where nro_documento = %s
+            """,
+            ([self.__consulta])
+        )
+        for i in temp:
+            if i[0] == None:
+                return primera_vez
         return self.__consulta.get_historia()
 
     def ingresar_comentarios(self, _comentario):
