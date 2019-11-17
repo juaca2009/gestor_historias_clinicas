@@ -144,7 +144,7 @@ class sistema(object):
                     if i.nro_documento != None:
                         return 0 
                 if self.verificar_correo(_correo) == True:
-                    self.__admin.agregar_doctor(_correo, _nombre, _ciudad, _direccion,
+                    self.__admin.agregar_empresa(_correo, _nombre, _ciudad, _direccion,
                                                    'nit', _ndocumento, _ntelefono)
                     return 1
                 return 0
@@ -176,7 +176,7 @@ class sistema(object):
                 for i in temp:
                     if i.tipo_examen == _tipo_examen:
                         examen = True
-                if existe == True and examen = True:
+                if existe == True and examen == True:
                     self.__admin.asignar_examen(_tipo_examen, _documento)
                     return 1
                 else:
@@ -338,10 +338,12 @@ class sistema(object):
             self.__enfermero.set_asignacion(False)
 
 
-#a = sistema()
-#a.iniciar_sesion('felipe12@gmail.com', '2d49fq19')
-#b = date(1999, 9, 22)
-#
+# a = sistema()
+# a.iniciar_sesion('felipe12@gmail.com', '2d49fq19')
+# b = date(1990, 12, 7)
+# print(a.asignar_examen('endoscopia', 26920048))
+
+
 
 
         
