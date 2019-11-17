@@ -155,6 +155,37 @@ class sistema(object):
 
 
 
+    def asignar_examen(self, _tipo_examen, _documento):
+        existe = False
+        examen = False
+        if _tipo_examen != None and _documento !=None:
+            if type(_tipo_examen) is str and type(_documento) is int:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login
+                    """
+                )
+                for i in temp:
+                    if i.nro_documento == _documento and i.rol == 'enfermero':
+                        existe = True
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from asignacion_examenes
+                    """
+                )
+                for i in temp:
+                    if i.tipo_examen == _tipo_examen:
+                        examen = True
+                if existe == True and examen = True:
+                    self.__admin.asignar_examen(_tipo_examen, _documento)
+                    return 1
+                else:
+                    return 0
+            else:
+                return 0
+        return 0
+
+
 
 
 
