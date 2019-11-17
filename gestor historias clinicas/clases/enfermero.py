@@ -21,7 +21,7 @@ class enfermero(usuario):
     def set_nro_cola(self, _cola):
         self.__nro_cola = _cola
 
-    def def set_asignacion(self, _asig):
+    def set_asignacion(self, _asig):
         self.__asignacion = _asig
 
     def buscar_examenes(self):
