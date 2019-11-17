@@ -85,7 +85,7 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
 
 
 
-    def agregar_empresa(self, _nombre, _ciudad, _direccion,  _tdocumento, _ndocumento, _ntelefono):
+    def agregar_empresa(self, _correo, _nombre, _ciudad, _direccion,  _tdocumento, _ndocumento, _ntelefono):
         temp = usuario.get_base(self).execute(
             """
             insert into rol_usuario(rol, nro_documento, ciudad, direccion, 
