@@ -93,9 +93,7 @@ CREATE TABLE especializacion_examenes(
 CREATE TABLE paciente_examenes(
   nro_documento int,
   tipo_examen text,
-  fecha date,
-  nombre_enfermero text,
-  apellido_enfermero text,
+  estado text,
   primary key(nro_documento, tipo_examen)
 );
 
