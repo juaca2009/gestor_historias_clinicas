@@ -178,9 +178,9 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
         temp = usuario.get_base(self).execute(
             """
             update asignacion_examenes set id_enfermero = %s, nombre = %s, apellido = %s
-            here tipo_examen = %s
+            where tipo_examen = %s
             """,
-            (_documento, nombre, apellidos, _tipo_examen)
+            (_documento, nombre, apellido, _tipo_examen)
         )
 
 
