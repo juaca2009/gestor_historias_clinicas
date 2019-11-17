@@ -7,6 +7,7 @@ from empresa import empresa
 from enfermero import enfermero
 from paciente import paciente
 from recepcionista import recepcionista
+from validate_email import validate_email
 
 class sistema(object):
     __instancia = None
@@ -25,9 +26,41 @@ class sistema(object):
             self.__empresa = None
         return self.__instancia
 
-    
+
+
+#metodos administrador
+    def verificar_correo(self, _correo):
+        return validate_email(_correo, verify=True)
+
+
+
+    def agregar_paciente(self, _nombre, _apellido, _fechan, _ciudad, _direccion,
+                         _tdocumento, _ndocumento, _ntelefono, _correo):
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad = None and _direccion = None and and_tdocumento = None and _ndocumento  = None and _ntelefono = None and _correo = None:
+            if type(_nombre) is str and type(_apellido) is str and type(_fechan) is str and type(_ciudad) is str and type(_direccion) is str and type(and_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is str and type(_correo) is str:
+               temp = self.__base.get_sesion().execute(
+                   """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nombre != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__admin.agregar_paciente(_nombre, _apellido, _fechan, _ciudad, _direccion,
+                                                  _tdocumento, _ndocumento, _ntelefono, _correo)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+
     def iniciar_sesion(self, _correo, _contrasena):
-        if (_correo != None or _contrasena != None):
+        if (_correo != None and _contrasena != None):
             if type(_correo) is str and type(_contrasena) is str:
                 rol = None
                 documento = None
@@ -75,47 +108,47 @@ class sistema(object):
 
             """
             select nombre, apellidos, fecha_nacimiento, ciudad, direccion from rol_usuario
-            whrere rol = 'administrador' and nro_documento = %s
+            where rol = 'administrador' and nro_documento = %s
             """,
             ([_documento])
         )
         for i in temp:
-            self.__admin = administrador(_correo, _contra, self.__base.get_sesion(), i._nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, documento)
+            self.__admin = administrador(_correo, _contra, self.__base.get_sesion(), i.nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, _documento)
 
     def iniciar_recepcionista(self,  _documento, _correo, _contra):
         temp = self.__base.get_sesion().execute(
             """
             select nombre, apellidos, fecha_nacimiento, ciudad, direccion from rol_usuario
-            whrere rol = 'recepcionista' and nro_documento = %s
+            where rol = 'recepcionista' and nro_documento = %s
             """,
             ([_documento])
         )
         for i in temp:
-            self.__recepcionista = recepcionista(_correo, _contra, self.__base.get_sesion(), i._nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, documento)
+            self.__recepcionista = recepcionista(_correo, _contra, self.__base.get_sesion(), i.nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, _documento)
 
     
     def iniciar_empresa(self, _documento, _correo, _contra):
         temp = self.__base.get_sesion().execute(
             """
             select nombre, ciudad, direccion from rol_usuario
-            whrere rol = 'empresa' and nro_documento = %s
+            where rol = 'empresa' and nro_documento = %s
             """,
             ([_documento])
         )
         for i in temp:
-            self.__empresa = empresa(_correo, _contra, self.__base.get_sesion(), i._nombre, None, None, i.ciudad, i.direccion, documento)
+            self.__empresa = empresa(_correo, _contra, self.__base.get_sesion(), i.nombre, None, None, i.ciudad, i.direccion, _documento)
 
 
     def iniciar_paciente(self, _documento, _correo, _contra):
         temp = self.__base.get_sesion().execute(
             """
             select nombre, apellidos, fecha_nacimiento, ciudad, direccion from rol_usuario
-            whrere rol = 'paciente' and nro_documento = %s
+            where rol = 'paciente' and nro_documento = %s
             """,
             ([_documento])
         )
         for i in temp:            
-            self.__paciente = paciente(_correo, _contra, self.__base.get_sesion(), i._nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, documento)
+            self.__paciente = paciente(_correo, _contra, self.__base.get_sesion(), i.nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, _documento)
     
 
     def iniciar_doctor(self,  _documento, _correo, _contra):
@@ -161,15 +194,15 @@ class sistema(object):
             ([_documento])
         )
         for i in temp:
-            self.__enfermero = enfermero(_correo, _contra, self.__base.get_sesion(), i._nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, documento, cola, self.__atention_pool, None)
+            self.__enfermero = enfermero(_correo, _contra, self.__base.get_sesion(), i.nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, _documento, cola, self.__atention_pool, None)
         if (cola != None):
             self.__enfermero.set_asignacion(True)
         else:
             self.__enfermero.set_asignacion(False)
 
 
-# a = sistema()
-# print(a.iniciar_sesion('juaca', '1wqw2'))
+a = sistema()
+
 
         
 
