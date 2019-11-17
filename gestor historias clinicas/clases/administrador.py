@@ -148,8 +148,18 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
 
 
 
-    def asignar_examen(self, _tipo_examen, _nombree, _apellidoe, _documento):
-
+    def asignar_examen(self, _tipo_examen, _documento):
+        nombre = None
+        apellido = None
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre, apellidos from rol_usuario where rol = 'enfermero' and nro_documento = %s
+            """,
+            ([_documento])
+        )
+        for i in temp:
+            nombre = i.nombre
+            apellido = i.apellidos
         temp = usuario.get_base(self).execute(
             """
             select * from asignacion_examenes
@@ -170,7 +180,7 @@ especialidad, fecha_nacimiento, nombre, numero_cel, telefono, tipo_documento)
             update asignacion_examenes set id_enfermero = %s, nombre = %s, apellido = %s
             here tipo_examen = %s
             """,
-            (_documento, _nombree, _apellidoe, _tipo_examen)
+            (_documento, nombre, apellidos, _tipo_examen)
         )
 
 
