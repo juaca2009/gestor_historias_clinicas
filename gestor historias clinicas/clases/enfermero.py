@@ -5,17 +5,24 @@ from atencion_pool import atencion_pool
 
 class enfermero(usuario):
     def __init__(self,  _correo, _contra, _base, _nombre, _apellido,
-                 _fechan, _ciudad, _direccion, _documento, _nro_cola, _obj):
+                 _fechan, _ciudad, _direccion, _documento, _nro_cola, _obj, _asignacion):
         usuario.__init__(self, _correo, _contra, _base, _nombre, _apellido, _fechan, _ciudad, _direccion, _documento)
         self.__nro_cola = _nro_cola
         self.__consulta = None
         self.__obcj_pool = _obj
+        self.__asignacion = _asignacion
     
     def get_nro_cola(self):
         return self.__nro_cola
 
+    def get_asignacion(self):
+        return self.__asignacion
+
     def set_nro_cola(self, _cola):
         self.__nro_cola = _cola
+
+    def def set_asignacion(self, _asig):
+        self.__asignacion = _asig
 
     def buscar_examenes(self):
         cons = self.__obcj_pool.obtener_primera_posicion()
