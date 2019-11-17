@@ -176,7 +176,7 @@ class doctor(usuario):
             return maxc + 1
 
 
-    def agendar_examen(self, _tipo_examen, _apellidop):
+    def agendar_examen(self, _tipo_examen):
         espec = None
         enf = {'nombre': None, 'apellido': None, 'cola': None}
         temp = usuario.get_base(self).execute(
@@ -204,6 +204,18 @@ class doctor(usuario):
             values (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (enf['cola'], self.__consulta.get_documento(), enf['apellido'], self.__consulta.get_apellido_paciente(), enf['nombre'], self.__consulta.get_nombre_paciente(), self.aumentar_posicion_examen(enf['cola']), _tipo_examen)
+        )
+        temp = usuario.get_base(self).execute(
+            """
+            insert into paciente_examenes(nro_documento, tipo_examen, estado) values(%s, %s, 'false')
+            """,
+            (_ndocumento, _tipo_examen)
+        )
+        temp = usuario.get_base(self).execute(
+            """
+            insert into paciente_examenes(nro_documento, tipo_examen, estado) values(%s, %s, 'false')
+            """,
+            (self.__consulta.get_documento(), _tipo_examen)
         )
         self.agendar_consulta_parcial(espec, self.__consulta.get_documento(), self.__consulta.get_nombre_paciente(), self.__consulta.get_apellido_paciente())
 
