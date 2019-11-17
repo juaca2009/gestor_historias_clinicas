@@ -100,9 +100,9 @@ class empresa(usuario):
         medicos = list()
         temp = usuario.get_base(self).execute(
             """
-            select nombre, apellidos from rol_usuario where rol = 'enfermero' and nro_documento = %s
+            select nombre, apellidos from rol_usuario where rol = 'paciente' and nro_documento = %s
             """,
-            ([_documento])
+            ([_ndocumento])
         )
         for i in temp:
             nombre = i.nombre
@@ -148,9 +148,9 @@ class empresa(usuario):
         enf = {'nombre': None, 'apellido': None, 'cola': None}
         temp = usuario.get_base(self).execute(
             """
-            select nombre, apellidos from rol_usuario where rol = 'enfermero' and nro_documento = %s
+            select nombre, apellidos from rol_usuario where rol = 'paciente' and nro_documento = %s
             """,
-            ([_documento])
+            ([_ndocumento])
         )
         for i in temp:
             nombre = i.nombre
@@ -187,7 +187,7 @@ class empresa(usuario):
             """,
             (_ndocumento, _tipo_examen)
         )
-        self.agendar_consulta_parcial(espec, _ndocumento, nombre, _apellidop)
+        self.agendar_consulta_parcial(espec, _ndocumento, nombre, apellido)
 
     def agendar_consulta_parcial(self, _especialidad, _ndocumento, _nombrep, _apellidop):
         medicos = list()
