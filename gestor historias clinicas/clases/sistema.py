@@ -59,7 +59,112 @@ class sistema(object):
             return 0
 
 
+    def agregar_recepcionista(self, _nombre, _apellido, _fechan, _ciudad, _direccion, 
+                              _tdocumento, _ndocumento, _ntelefono, _correo):
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad != None and _direccion != None and _tdocumento != None and _ndocumento  != None and _ntelefono != None and _correo != None:
+            if type(_nombre) is str and type(_apellido) is str and type(_ciudad) is str and type(_direccion) is str and type(_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__admin.agregar_recepcionista(_nombre, _apellido, _fechan, _ciudad, _direccion,
+                                                       _tdocumento, _ndocumento, _ntelefono, _correo)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
 
+    
+    def agregar_enfermero(self, _nombre, _apellido, _fechan, _ciudad, _direccion, 
+                          _tdocumento, _ndocumento, _ntelefono, _correo):
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad != None and _direccion != None and _tdocumento != None and _ndocumento  != None and _ntelefono != None and _correo != None:
+            if type(_nombre) is str and type(_apellido) is str and type(_ciudad) is str and type(_direccion) is str and type(_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__admin.agregar_enfermero(_nombre, _apellido, _fechan, _ciudad, _direccion,
+                                                   _tdocumento, _ndocumento, _ntelefono, _correo)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+    def agregar_doctor(self, _nombre, _apellido, _fechan, _ciudad, _direccion, 
+                       _tdocumento, _ndocumento, _ntelefono, _correo,  _celular, _especialidad):
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad != None and _direccion != None and _tdocumento != None and _ndocumento  != None and _ntelefono != None and _correo != None and _celular != None and _especialidad != None:
+            if type(_nombre) is str and type(_apellido) is str and type(_ciudad) is str and type(_direccion) is str and type(_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str and type(_celular) is int and type(_especialidad) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__admin.agregar_doctor(_nombre, _apellido, _fechan, _ciudad, _direccion,
+                                                   _tdocumento, _ndocumento, _ntelefono, _correo, _celular, _especialidad)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+    def agregar_empresa(self, _correo, _nombre, _ciudad, _direccion, _ndocumento, _ntelefono):
+        if _nombre != None and _ciudad != None and _direccion != None and _ndocumento  != None and _ntelefono != None and _correo != None:
+            if type(_nombre) is str and type(_ciudad) is str and type(_direccion) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__admin.agregar_doctor(_correo, _nombre, _ciudad, _direccion,
+                                                   'nit', _ndocumento, _ntelefono)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+
+
+
+
+
+
+
+
+
+
+#metodos generales
     def iniciar_sesion(self, _correo, _contrasena):
         if (_correo != None and _contrasena != None):
             if type(_correo) is str and type(_contrasena) is str:
