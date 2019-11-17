@@ -338,10 +338,107 @@ class sistema(object):
             self.__enfermero.set_asignacion(False)
 
 
-# a = sistema()
-# a.iniciar_sesion('felipe12@gmail.com', '2d49fq19')
-# b = date(1990, 12, 7)
-# print(a.asignar_examen('endoscopia', 26920048))
+
+
+
+
+
+
+
+
+
+
+
+
+#metodos empresa
+    def registrar_paciente(self, _nombre, _apellido, _fechan, _ciudad, _direccion,
+                            _tdocumento, _ndocumento, _ntelefono, _correo):
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad != None and _direccion != None and _tdocumento != None and _ndocumento  != None and _ntelefono != None and _correo != None:
+            if type(_nombre) is str and type(_apellido) is str and type(_ciudad) is str and type(_direccion) is str and type(_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__empresa.registrar_paciente(_nombre, _apellido, _fechan, _ciudad, _direccion,
+                                                  _tdocumento, _ndocumento, _ntelefono, _correo)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
+
+    
+    def agendar_consulta_general_empresa(self, _ndocumento):
+        existe = False
+        if _ndocumento != None:
+            if type(_ndocumento) is int:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento == _ndocumento and i.rol == 'paciente':
+                        existe = True
+                if existe == True:
+                    self.__empresa.agendar_consulta_general(_ndocumento)
+                    return 1
+                else:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0
+
+    def agendar_examen_empresa(self, _tipo_examen, _ndocumento):
+        existe = False
+        examen = False
+        if _tipo_examen != None and _ndocumento != None:
+            if type(_tipo_examen) is str and type(_ndocumento) is int:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento == _ndocumento and i.rol == 'paciente':
+                        existe = True
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from asignacion_examenes where tipo_examen = %s
+                    """,
+                    ([_tipo_examen])
+                )
+                for i in temp:
+                    if i.tipo_examen != None:
+                        examen = True
+                if existe == True and examen == True:
+                    self.__empresa.agendar_examen(_tipo_examen, _ndocumento)
+                    return 1
+                else:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+
+
+
+a = sistema()
+a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
+#b = date(1997, 1, 23)
+print(a.agendar_examen_empresa('endoscopia', 1144108))
 
 
 
