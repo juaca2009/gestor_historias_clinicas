@@ -8,6 +8,7 @@ from enfermero import enfermero
 from paciente import paciente
 from recepcionista import recepcionista
 from validate_email import validate_email
+from datetime import date
 
 class sistema(object):
     __instancia = None
@@ -36,16 +37,16 @@ class sistema(object):
 
     def agregar_paciente(self, _nombre, _apellido, _fechan, _ciudad, _direccion,
                          _tdocumento, _ndocumento, _ntelefono, _correo):
-        if _nombre != None and _apellido != None and _fechan != None and _ciudad = None and _direccion = None and and_tdocumento = None and _ndocumento  = None and _ntelefono = None and _correo = None:
-            if type(_nombre) is str and type(_apellido) is str and type(_fechan) is str and type(_ciudad) is str and type(_direccion) is str and type(and_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is str and type(_correo) is str:
-               temp = self.__base.get_sesion().execute(
-                   """
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad != None and _direccion != None and _tdocumento != None and _ndocumento  != None and _ntelefono != None and _correo != None:
+            if type(_nombre) is str and type(_apellido) is str and type(_ciudad) is str and type(_direccion) is str and type(_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
                     select * from login where nro_documento = %s
                     """,
                     ([_ndocumento])
                 )
                 for i in temp:
-                    if i.nombre != None:
+                    if i.nro_documento != None:
                         return 0 
                 if self.verificar_correo(_correo) == True:
                     self.__admin.agregar_paciente(_nombre, _apellido, _fechan, _ciudad, _direccion,
@@ -201,7 +202,10 @@ class sistema(object):
             self.__enfermero.set_asignacion(False)
 
 
-a = sistema()
+#a = sistema()
+#a.iniciar_sesion('felipe12@gmail.com', '2d49fq19')
+#b = date(1999, 9, 22)
+#
 
 
         
