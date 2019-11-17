@@ -94,8 +94,19 @@ class empresa(usuario):
         else:
             return maxc + 1
 
-    def agendar_consulta_general(self, _ndocumento, _nombrep, _apellidop):
+    def agendar_consulta_general(self, _ndocumento):
+        nombre = None
+        apellido = None
         medicos = list()
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre, apellidos from rol_usuario where rol = 'enfermero' and nro_documento = %s
+            """,
+            ([_documento])
+        )
+        for i in temp:
+            nombre = i.nombre
+            apellido = i.apellidos
         temp = usuario.get_base(self).execute(
             """
             select nombre_doctor, apellido_doctor, especialidad, nro_cola from asignacion_consultas 
@@ -116,7 +127,7 @@ class empresa(usuario):
                 especialidad, nombre_doctor, nombre_paciente, posicion)
                 values (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion_consulta(mec['nro_cola']))
+                (mec['nro_cola'], _ndocumento, mec['apellido'], apellido, 'general', mec['nombre'], nombre, self.aumentar_posicion_consulta(mec['nro_cola']))
             )
         else:
             num = randint(0,len(medicos)-1)
@@ -127,12 +138,23 @@ class empresa(usuario):
                 especialidad, nombre_doctor, nombre_paciente, posicion)
                 values (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion_consulta(mec['nro_cola']))
+                (mec['nro_cola'], _ndocumento, mec['apellido'], apellido, 'general', mec['nombre'], nombre, self.aumentar_posicion_consulta(mec['nro_cola']))
             )
 
-    def agendar_examen(self, _tipo_examen, _ndocumento, _nombrep, _apellidop):
+    def agendar_examen(self, _tipo_examen, _ndocumento):
+        nombre = None
+        apellido = None
         espec = None
         enf = {'nombre': None, 'apellido': None, 'cola': None}
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre, apellidos from rol_usuario where rol = 'enfermero' and nro_documento = %s
+            """,
+            ([_documento])
+        )
+        for i in temp:
+            nombre = i.nombre
+            apellido = i.apellidos
         temp = usuario.get_base(self).execute(
             """
             select * from especializacion_examenes
@@ -157,9 +179,15 @@ class empresa(usuario):
             apellido_paciente, nombre_enfermero, nombre_paciente, posicion, tipo_examen)
             values (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
-            (enf['cola'], _ndocumento, enf['apellido'], _apellidop, enf['nombre'], _nombrep, self.aumentar_posicion_examen(enf['cola']), _tipo_examen)
+            (enf['cola'], _ndocumento, enf['apellido'], apellido, enf['nombre'], nombre, self.aumentar_posicion_examen(enf['cola']), _tipo_examen)
         )
-        self.agendar_consulta_parcial(espec, _ndocumento, _nombrep, _apellidop)
+        temp = usuario.get_base(self).execute(
+            """
+            insert into paciente_examenes(nro_documento, tipo_examen, estado) values(%s, %s, 'false')
+            """,
+            (_ndocumento, _tipo_examen)
+        )
+        self.agendar_consulta_parcial(espec, _ndocumento, nombre, _apellidop)
 
     def agendar_consulta_parcial(self, _especialidad, _ndocumento, _nombrep, _apellidop):
         medicos = list()
