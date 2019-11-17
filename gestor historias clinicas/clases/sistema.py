@@ -8,8 +8,9 @@ from enfermero import enfermero
 from paciente import paciente
 from recepcionista import recepcionista
 
-class sistema():
+class sistema(object):
     __instancia = None
+
     def __new__(self):
         if not self.__instancia:
             self.__instancia = super(sistema, self).__new__(self)
@@ -36,7 +37,7 @@ class sistema():
                     """
                 )
                 for i in temp:
-                    if i.correo == _correo and i._contrasena == _contrasena:
+                    if i.correo == _correo and i.contrasena == _contrasena:
                         rol = i.rol
                         documento = i.nro_documento
                         break
@@ -45,7 +46,7 @@ class sistema():
                         self.iniciar_administrador(documento, _correo, _contrasena)
                         return 1
                     elif rol == 'recepcionista':
-                        self.iniciar_recepcionista(documento, _correo, _contrasena):
+                        self.iniciar_recepcionista(documento, _correo, _contrasena)
                         return 2
                     elif rol == 'empresa':
                         self.iniciar_empresa(documento, _correo, _contrasena)
@@ -59,6 +60,13 @@ class sistema():
                     else:
                         self.iniciar_enfermero(documento, _correo, _contrasena)
                         return 6
+                else:
+                    return 0
+            else:
+                return 0
+
+        else:
+            return 0
 
 
 
@@ -120,16 +128,16 @@ class sistema():
         )
         for i in temp:
             cola = i.nro_cola
-            self.__atention_pool.cargar_consultas(i._nro_cola)
+            self.__atention_pool.cargar_consultas(i.nro_cola)
         temp = self.__base.get_sesion().execute(
             """
             select nombre, apellidos, fecha_nacimiento, ciudad, direccion, especialidad from rol_usuario
-            whrere rol = 'doctor' and nro_documento = %s
+            where rol = 'doctor' and nro_documento = %s
             """,
             ([_documento])
         )
         for i in temp:
-            self.__doctor = doctor(correo, _contra, self.__base.get_sesion(), i._nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, documento, i.especialidad, cola, self.__atention_pool)
+            self.__doctor = doctor(_correo, _contra, self.__base.get_sesion(), i.nombre, i.apellidos, i.fecha_nacimiento, i.ciudad, i.direccion, _documento, i.especialidad, cola, self.__atention_pool)
         
 
 
@@ -160,7 +168,8 @@ class sistema():
             self.__enfermero.set_asignacion(False)
 
 
-a = sistema()
+# a = sistema()
+# print(a.iniciar_sesion('juaca', '1wqw2'))
 
         
 
