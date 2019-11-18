@@ -63,11 +63,11 @@ class atencion(object):
         for i in temp:
             self.__historia_clinica = 'nro historia:' + ' ' + str(i.id_historia)
             self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'nombre doctor:' + ' ' + i.nombre_doctor
+            self.__historia_clinica = self.__historia_clinica + 'nombre doctor:' + ' ' + str(i.nombre_doctor)
             self.__historia_clinica = self.__historia_clinica + " /n"
-            self.__historia_clinica = self.__historia_clinica + 'apellido doctor:' + ' ' + i.apellido_doctor
+            self.__historia_clinica = self.__historia_clinica + 'apellido doctor:' + ' ' + str(i.apellido_doctor)
             self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'especialidad:' + ' ' + i.especialidad
+            self.__historia_clinica = self.__historia_clinica + 'especialidad:' + ' ' + str(i.especialidad)
             self.__historia_clinica = self.__historia_clinica + '/n'
             self.__historia_clinica = self.__historia_clinica + 'nombre enfermero:' + ' ' + str(i.nombre_enfermero)
             self.__historia_clinica = self.__historia_clinica + '/n'
