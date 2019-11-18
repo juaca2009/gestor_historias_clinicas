@@ -117,7 +117,7 @@ class enfermero(usuario):
     def despachar_paciente(self, _comentario):
         self.ingresar_comentarios(_comentario)
         self.confirmar_examen()
-        self.__consulta.cargar_comentarios()
+        self.__consulta.cargar_resultados()
         temp = usuario.get_base(self).execute(
             """
             select * from colas_examenes where nro_cola = %s
@@ -132,13 +132,12 @@ class enfermero(usuario):
                     """,
                     (self.__nro_cola, i.nro_documento)
                 )
-                break
         self.__obcj_pool.cargar_examenes(self.__nro_cola)
         self.verificar_dependencias()
 
 
     def llamar_paciente(self):
-        self.__obcj_pool.cargar_examenes(_nro_cola)
+        self.__obcj_pool.cargar_examenes(self.__nro_cola)
         if(self.buscar_consultas() == 1 or self.buscar_examenes() == 1):
             self.cambiar_cola()
             return 0
@@ -147,20 +146,25 @@ class enfermero(usuario):
             return 1
 
     def obtener_historia_clinicas(self):
+        histo = False
+        docu = self.__consulta.get_documento()
         primera_vez = 'este usuario no posee historia clinica'
-        temp = self.__base.get_sesion().execute(
+        temp = usuario.get_base(self).execute(
             """
             select * from paciente_historia where nro_documento = %s
             """,
-            ([self.__consulta])
+            ([docu])
         )
         for i in temp:
-            if i[0] == None:
-                return primera_vez
-        return self.__consulta.get_historia()
+            if i.id_historia != None:
+                histo = True
+        if histo == True:
+            return self.__consulta.get_historia()
+        else:
+            return primera_vez
 
     def ingresar_comentarios(self, _comentario):
-        self.__consulta.set_comentario(_comentario)
+        self.__consulta.set_resultados(_comentario)
 
     def confirmar_examen(self):
         temp = usuario.get_base(self).execute(
@@ -187,7 +191,7 @@ class enfermero(usuario):
 
         temp = usuario.get_base(self).execute(
             """
-            select tipo_examen from  especializacion_examenes where  especializacion %s 
+            select tipo_examen from  especializacion_examenes where especializacion = %s 
             """,
             ([espc])
         )
@@ -217,7 +221,7 @@ class enfermero(usuario):
                         update colas_consultas set posicion = %s
                         where nro_cola = %s and nro_documento = %s
                         """,
-                        (self.aumentar_posicion_consulta(i._nro_cola), i.nro_cola, self.__consulta.get_documento())
+                        (self.aumentar_posicion_consulta(i.nro_cola), i.nro_cola, self.__consulta.get_documento())
                     )
 
 
