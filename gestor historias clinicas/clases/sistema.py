@@ -316,8 +316,7 @@ class sistema(object):
         temp = self.__base.get_sesion().execute(
             """
             select * from asignacion_examenes
-            """,
-            ([_documento])
+            """
         )
         for i in temp:
             if i.id_enfermero == _documento:
@@ -326,7 +325,7 @@ class sistema(object):
         temp = self.__base.get_sesion().execute(
             """
             select nombre, apellidos, fecha_nacimiento, ciudad, direccion from rol_usuario
-            whrere rol = 'enfermero' and nro_documento = %s
+            where rol = 'enfermero' and nro_documento = %s
             """,
             ([_documento])
         )
@@ -435,10 +434,59 @@ class sistema(object):
 
 
 
+
+
+
+
+
+
+
+
+#metodos enfermero
+    def llamar_paciente_enfermero(self):
+        cola = False
+        if(self.__enfermero.get_asignacion() == True):
+            temp = self.__base.get_sesion().execute(
+                """
+                select max(posicion) from colas_examenes where nro_cola = %s
+                """,
+                ([self.__enfermero.get_nro_cola()])
+            )
+            for i in temp:
+                if i[0] != None:
+                    cola = True
+            if cola == True:
+                return self.__enfermero.llamar_paciente()
+            else:
+                return 0
+        else:
+            return 0
+
+    def mostrar_historia_enfermero(self):
+        return self.__enfermero.obtener_historia_clinicas()
+
+    def despachar_paciente_enfermero(self, _comentario):
+        if _comentario != None:
+            if type(_comentario) is str:
+
+                self.__enfermero.despachar_paciente(_comentario)
+                return 1
+            else:
+                return 0
+        else:
+            return 0 
+
+
+
+
 a = sistema()
-a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
+a.iniciar_sesion('antonino16@gmail.com', 'fl69wo31')
 #b = date(1997, 1, 23)
-print(a.agendar_examen_empresa('endoscopia', 1144108))
+#a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
+#a.agendar_examen_empresa('endoscopia', 1286456)
+print(a.llamar_paciente_enfermero())
+#print(a.mostrar_historia_enfermero())
+#print(a.despachar_paciente_enfermero('uretra sana'))
 
 
 
