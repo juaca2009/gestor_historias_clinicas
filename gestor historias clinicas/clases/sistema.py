@@ -546,11 +546,11 @@ class sistema(object):
 
 
 
-a = sistema()
-a.iniciar_sesion('camia177@gmail.com', '2sd44f6h')
-print(a.llamar_paciente_doctor())
-print(a.agendar_examen_doctor('urodinamia'))
-print(a.despachar_paciente_doctor('sano, pero no me convence'))
+# a = sistema()
+# a.iniciar_sesion('camia177@gmail.com', '2sd44f6h')
+# print(a.llamar_paciente_doctor())
+# print(a.agendar_examen_doctor('urodinamia'))
+# print(a.despachar_paciente_doctor('sano, pero no me convence'))
 #b = date(1997, 1, 23)
 #a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
 #a.agendar_examen_empresa('endoscopia', 1286456)
