@@ -225,7 +225,7 @@ class doctor(usuario):
             """
             insert into paciente_examenes(nro_documento, tipo_examen, estado) values(%s, %s, 'false')
             """,
-            (_ndocumento, _tipo_examen)
+            (self.__consulta.get_documento(), _tipo_examen)
         )
         temp = usuario.get_base(self).execute(
             """
@@ -281,7 +281,7 @@ class doctor(usuario):
             """
         )
         for i in temp:
-            if _ndocumento == i.nro_documento and _especialidad == i.especialidad:
+            if _ndocumento == i.nro_documento and _especialidad == i.especialidad and i.posicion != 0:
                 return 1
         return 0
 
