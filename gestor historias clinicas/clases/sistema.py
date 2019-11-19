@@ -483,18 +483,19 @@ class sistema(object):
     def llamar_paciente_doctor(self):
         cola = False
         temp = self.__base.get_sesion().execute(
-                """
-                select max(posicion) from colas_consultas where nro_cola = %s
-                """,
-                ([self.__doctor.get_nro_cola()])
-            )
-            for i in temp:
-                if i[0] != None:
-                    cola = True
-            if cola == True:
-                return self.__enfermero.llamar_paciente()
-            else:
-                return 0
+
+            """
+            select max(posicion) from colas_consultas where nro_cola = %s
+            """,
+            ([self.__doctor.get_nro_cola()])
+        )
+        for i in temp:
+            if i[0] != None:
+                cola = True
+        if cola == True:
+            return self.__doctor.llamar_paciente()
+        else:
+            return 0
 
 
 
@@ -521,7 +522,9 @@ class sistema(object):
 
 
 a = sistema()
-a.iniciar_sesion('antonino16@gmail.com', 'fl69wo31')
+a.iniciar_sesion('camia177@gmail.com', '2sd44f6h')
+print(a.llamar_paciente_doctor())
+print(a.despachar_paciente_doctor('sano'))
 #b = date(1997, 1, 23)
 #a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
 #a.agendar_examen_empresa('endoscopia', 1286456)
