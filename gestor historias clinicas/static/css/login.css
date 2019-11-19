@@ -114,9 +114,9 @@ input[type="submit"]:hover{
 	right:0;
 	box-sizing: border-box;
 	padding: 40px;
-	width: 700px;
+	width: 300px;
 	height: 400px;
-	background-image: url(../imagenes/fondo.jpg);
+	background-image: url(fondo.jpg);
 	background-size: cover;
 	background-position: center;
 }
