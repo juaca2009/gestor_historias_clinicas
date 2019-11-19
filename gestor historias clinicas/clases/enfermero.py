@@ -132,8 +132,8 @@ class enfermero(usuario):
                     """,
                     (self.__nro_cola, i.nro_documento)
                 )
-        self.__obcj_pool.cargar_examenes(self.__nro_cola)
         self.verificar_dependencias()
+        self.__obcj_pool.cargar_examenes(self.__nro_cola)
 
 
     def llamar_paciente(self):
@@ -222,6 +222,12 @@ class enfermero(usuario):
                         where nro_cola = %s and nro_documento = %s
                         """,
                         (self.aumentar_posicion_consulta(i.nro_cola), i.nro_cola, self.__consulta.get_documento())
+                    )
+                    temp = usuario.get_base(self).execute(
+                        """
+                        delete from paciente_examenes where nro_documento = %s
+                        """,
+                        ([self.__consulta.get_documento()])
                     )
 
 
