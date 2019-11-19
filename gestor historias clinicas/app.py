@@ -84,6 +84,21 @@ def empresa():
     if g.user:
         return redirect(url_for('reg_empresa'))
 
+@app.route("/asignar", methods = ["POST"])
+def asignar():
+    global sis
+    if g.user:
+        return redirect(url_for('asig_examenes'))
+
+
+@app.route("/asig_examenes", methods = ["GET", "POST"])
+def asig_examenes():
+    global sis
+    if g.user:
+        exa = sis.get_asignacion_examenes()
+        return render_template("asignar_examen.html", exam = exa)
+
+
 
 @app.route("/reg_recepcionista", methods = ["GET", "POST"])
 def reg_recepcionista():
