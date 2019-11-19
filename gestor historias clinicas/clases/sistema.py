@@ -513,6 +513,31 @@ class sistema(object):
     def mostrar_historia_doctor(self):
         return self.__doctor.obtener_historia_clinicas()
 
+    def agendar_examen_doctor(self, _tipo_examen):
+        examen = False
+        if _tipo_examen != None:
+            if type(_tipo_examen) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from asignacion_examenes where tipo_examen = %s
+                    """,
+                    ([_tipo_examen])
+                )
+                for i in temp:
+                    if i.tipo_examen != None:
+                        examen = True
+                if examen == True:
+                    self.__doctor.agendar_examen(_tipo_examen)
+                    return 1
+                else:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+
 
 
 
@@ -524,7 +549,8 @@ class sistema(object):
 a = sistema()
 a.iniciar_sesion('camia177@gmail.com', '2sd44f6h')
 print(a.llamar_paciente_doctor())
-print(a.despachar_paciente_doctor('sano'))
+print(a.agendar_examen_doctor('urodinamia'))
+print(a.despachar_paciente_doctor('sano, pero no me convence'))
 #b = date(1997, 1, 23)
 #a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
 #a.agendar_examen_empresa('endoscopia', 1286456)
