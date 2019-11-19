@@ -50,12 +50,6 @@ def admin_m():
         return render_template("admin.html")
     return redirect(url_for('login'))
 
-@app.route("/paciente", methods = ["POST"])
-def paciente():
-    global sis
-    if g.user:
-        if request.method == "POST":
-            return redirect(url_for('reg_paciente'))
 
 @app.route("/recepcionista", methods = ["POST"])
 def recepcionista():
@@ -90,13 +84,23 @@ def asignar():
     if g.user:
         return redirect(url_for('asig_examenes'))
 
+@app.route("/salir_ad", methods = ["POST"])
+def salir_ad():
+    global sis
+    if g.user:
+        return redirect(url_for('admin_m'))
+
 
 @app.route("/asig_examenes", methods = ["GET", "POST"])
 def asig_examenes():
     global sis
     if g.user:
-        exa = sis.get_asignacion_examenes()
-        return render_template("asignar_examen.html", exam = exa)
+        if request.method == "POST":
+            if sis.asignar_examen(str(request.form["examen"]), str(request.form["documento"])) == 1:
+               return redirect(url_for('asig_examenes'))
+            else:
+                return redirect(url_for('admin_m'))
+        return render_template("asignar_examen.html")
 
 
 
@@ -106,12 +110,16 @@ def reg_recepcionista():
     if g.user:
         if request.method == "POST":
             fecha = str(request.form["fecha_nacimiento"])
-            dt = datetime.strptime(fecha, '%Y-%m-%d')
-            d = dt.date()
-            tele = int(str(request.form["telefono"]))
-            docu = int(str(request.form["documento"]))
-            if sis.agregar_recepcionista(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
-                return redirect(url_for('admin_m'))
+            if fecha != '':
+                print(fecha)
+                dt = datetime.strptime(fecha, '%Y-%m-%d')
+                d = dt.date()
+                tele = int(str(request.form["telefono"]))
+                docu = int(str(request.form["documento"]))
+                if sis.agregar_recepcionista(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
+                    return redirect(url_for('admin_m'))
+                else:
+                    return redirect(url_for('reg_recepcionista'))
             else:
                 return redirect(url_for('reg_recepcionista'))
         return render_template("R_recepcionista.html")
@@ -122,12 +130,15 @@ def reg_enfermero():
     if g.user:
         if request.method == "POST":
             fecha = str(request.form["fecha_nacimiento"])
-            dt = datetime.strptime(fecha, '%Y-%m-%d')
-            d = dt.date()
-            tele = int(str(request.form["telefono"]))
-            docu = int(str(request.form["documento"]))
-            if sis.agregar_enfermero(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
-                return redirect(url_for('admin_m'))
+            if fecha != '':
+                dt = datetime.strptime(fecha, '%Y-%m-%d')
+                d = dt.date()
+                tele = int(str(request.form["telefono"]))
+                docu = int(str(request.form["documento"]))
+                if sis.agregar_enfermero(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
+                    return redirect(url_for('admin_m'))
+                else:
+                    return redirect(url_for('reg_enfermero'))
             else:
                 return redirect(url_for('reg_enfermero'))
         return render_template("R_enfermero.html")
@@ -139,32 +150,19 @@ def reg_doctor():
     if g.user:
         if request.method == "POST":
             fecha = str(request.form["fecha_nacimiento"])
-            dt = datetime.strptime(fecha, '%Y-%m-%d')
-            d = dt.date()
-            cel = int(str(request.form["celular"]))
-            tele = int(str(request.form["telefono"]))
-            docu = int(str(request.form["documento"]))
-            if sis.agregar_doctor(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"]), cel, str(request.form["especialidad"])) == 1:
-                return redirect(url_for('admin_m'))
+            if fecha != '':
+                dt = datetime.strptime(fecha, '%Y-%m-%d')
+                d = dt.date()
+                cel = int(str(request.form["celular"]))
+                tele = int(str(request.form["telefono"]))
+                docu = int(str(request.form["documento"]))
+                if sis.agregar_doctor(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"]), cel, str(request.form["especialidad"])) == 1:
+                    return redirect(url_for('admin_m'))
+                else:
+                    return redirect(url_for('reg_doctor'))
             else:
                 return redirect(url_for('reg_doctor'))
         return render_template("R_doctor.html")
-
-@app.route("/reg_paciente", methods = ["GET", "POST"])
-def reg_paciente():
-    global sis
-    if g.user:
-        if request.method == "POST":
-            fecha = str(request.form["fecha_nacimiento"])
-            dt = datetime.strptime(fecha, '%Y-%m-%d')
-            d = dt.date()
-            tele = int(str(request.form["telefono"]))
-            docu = int(str(request.form["documento"]))
-            if sis.agregar_paciente(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
-                return redirect(url_for('admin_m'))
-            else:
-                return redirect(url_for('reg_paciente'))
-        return render_template("R_paciente.html")
 
 @app.route("/reg_empresa", methods = ["GET", "POST"])
 def reg_empresa():
