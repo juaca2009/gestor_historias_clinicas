@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hermess Clinics</title>
+		<link href="../static/css/asignar.css" rel="stylesheet" type="text/css">
+
+	</head>
+	<body>
+		<div id="login-box">
+			<div class="left-box">
+				<form method="POST" action="">
+					<h1> asignar paciente </h1>
+					<input type="text" name="nuevo_examen" placeholder="nuevo examen"/>
+					<input type="text" name="documento" placeholder="documento enfermero"/>
+					<button class="btn" type="submit">asignar</button>
+                </form>
+                <from method="POST" action="">
+                    <button class="btn" type="submit">salir</button>
+                </from>
+					
+			</div>
+
+			<div class="right-box">
+				<table>
+                    <thead>
+                        <tr>
+                            <td>tipo_examen</td>
+                            <td>documento_enfermero</td>
+                            <td>apellido</td>
+                            <td>nombre</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+						{% for i in exam %}
+							<tr>
+								<td>{{ i.0 }}</td>
+								<td>{{ i.1 }}</td>
+								<td>{{ i.2 }}</td>
+								<td>{{ i.3 }}</td>
+							</tr>
+						{% endfor %}
+                    </tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
