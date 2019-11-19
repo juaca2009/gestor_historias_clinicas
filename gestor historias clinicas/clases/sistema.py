@@ -336,6 +336,23 @@ class sistema(object):
         else:
             self.__enfermero.set_asignacion(False)
 
+    def get_asignacion_examenes(self):
+        lis = list()
+        lis2 = list()
+        temp = self.__base.get_sesion().execute(
+            """
+            select * from asignacion_examenes
+            """
+        )
+        for i in temp:
+            lis.append(i.tipo_examen)
+            lis.append(i.id_enfermero)
+            lis.append(i.apellido)
+            lis.append(i.nombre)
+            lis2.append(lis)
+            lis = list()
+        return lis2
+
 
 
 
@@ -547,6 +564,7 @@ class sistema(object):
 
 
 # a = sistema()
+# print(a.get_asignacion_examenes())
 # a.iniciar_sesion('camia177@gmail.com', '2sd44f6h')
 # print(a.llamar_paciente_doctor())
 # print(a.agendar_examen_doctor('urodinamia'))
