@@ -28,7 +28,7 @@ a:visited {
 	box-sizing: border-box;
 	padding: 40px;
 	width: 300px;
-	height: 400px;
+	height: 450px;
 	background-color: white;
 }
 
@@ -43,7 +43,7 @@ h1 {
 
 .btn{
 	margin-bottom: 28px;
-	width: 130px;
+	width: 250px;
 	height: 32px;
 	background: black;
 	border: none;
@@ -69,8 +69,8 @@ h1 {
 	box-sizing: border-box;
 	padding: 40px;
 	width: 300px;
-	height: 400px;
-	background-image: url(fondo.jpg);
+	height: 450px;
+	background-image: url(../imagenes/fondo.jpg);
 	background-size: cover;
 	background-position: center;
 	color: white;
@@ -86,7 +86,7 @@ h1 {
 
 .btn{
     display: block;
-    width: 120px;
+    width: 140px;
     padding: 10px;
     font-family: $font-family;
     -webkit-appearance: none;
