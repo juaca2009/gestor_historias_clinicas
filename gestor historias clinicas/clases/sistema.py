@@ -479,11 +479,52 @@ class sistema(object):
 
 
 
+#metodos doctor
+    def llamar_paciente_doctor(self):
+        cola = False
+        temp = self.__base.get_sesion().execute(
+                """
+                select max(posicion) from colas_consultas where nro_cola = %s
+                """,
+                ([self.__doctor.get_nro_cola()])
+            )
+            for i in temp:
+                if i[0] != None:
+                    cola = True
+            if cola == True:
+                return self.__enfermero.llamar_paciente()
+            else:
+                return 0
+
+
+
+    def despachar_paciente_doctor(self, _comentario):
+        if _comentario != None:
+            if type(_comentario) is str:
+                self.__doctor.despachar_paciente(_comentario)
+                return 1
+            else:
+                return 0
+        else:
+            return 0 
+
+
+    def mostrar_historia_doctor(self):
+        return self.__doctor.obtener_historia_clinicas()
+
+
+
+
+
+
+
+
+
 a = sistema()
-#a.iniciar_sesion('antonino16@gmail.com', 'fl69wo31')
+a.iniciar_sesion('antonino16@gmail.com', 'fl69wo31')
 #b = date(1997, 1, 23)
-a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
-a.agendar_examen_empresa('endoscopia', 1286456)
+#a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
+#a.agendar_examen_empresa('endoscopia', 1286456)
 #print(a.llamar_paciente_enfermero())
 #print(a.mostrar_historia_enfermero())
 #print(a.despachar_paciente_enfermero('uretra sana'))
