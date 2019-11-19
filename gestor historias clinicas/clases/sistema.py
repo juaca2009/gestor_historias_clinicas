@@ -480,11 +480,11 @@ class sistema(object):
 
 
 a = sistema()
-a.iniciar_sesion('antonino16@gmail.com', 'fl69wo31')
+#a.iniciar_sesion('antonino16@gmail.com', 'fl69wo31')
 #b = date(1997, 1, 23)
-#a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
-#a.agendar_examen_empresa('endoscopia', 1286456)
-print(a.llamar_paciente_enfermero())
+a.iniciar_sesion('luis.oviedolutkens@gmail.com', 'mqouq7c4')
+a.agendar_examen_empresa('endoscopia', 1286456)
+#print(a.llamar_paciente_enfermero())
 #print(a.mostrar_historia_enfermero())
 #print(a.despachar_paciente_enfermero('uretra sana'))
 
