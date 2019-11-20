@@ -64,8 +64,19 @@ class recepcionista(usuario):
         self.enviar_contrasena(_correo, contra_temp)
         self.insertar_login(_correo, contra_temp, _ndocumento, 'paciente')
 
-    def agendar_consulta_general(self, _ndocumento, _nombrep, _apellidop):
+    def agendar_consulta_general(self, _ndocumento):
+        nombre = None
+        apellido = None
         medicos = list()
+        temp = usuario.get_base(self).execute(
+            """
+            select nombre, apellidos from rol_usuario where rol = 'paciente' and nro_documento = %s
+            """,
+            ([_ndocumento])
+        )
+        for i in temp:
+            nombre = i.nombre
+            apellido = i.apellidos
         temp = usuario.get_base(self).execute(
             """
             select nombre_doctor, apellido_doctor, especialidad, nro_cola from asignacion_consultas 
@@ -87,7 +98,7 @@ class recepcionista(usuario):
                 especialidad, nombre_doctor, nombre_paciente, posicion)
                 values (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion(mec['nro_cola']))
+                (mec['nro_cola'], _ndocumento, mec['apellido'], apellido, 'general', mec['nombre'], nombre, self.aumentar_posicion(mec['nro_cola']))
             )
         else:
             num = randint(0,len(medicos)-1)
@@ -98,7 +109,7 @@ class recepcionista(usuario):
                 especialidad, nombre_doctor, nombre_paciente, posicion)
                 values (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                (mec['nro_cola'], _ndocumento, mec['apellido'], _apellidop, 'general', mec['nombre'], _nombrep, self.aumentar_posicion(mec['nro_cola']))
+                (mec['nro_cola'], _ndocumento, mec['apellido'], apellido, 'general', mec['nombre'], nombre, self.aumentar_posicion(mec['nro_cola']))
             )
 
 
