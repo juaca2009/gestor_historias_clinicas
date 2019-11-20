@@ -126,8 +126,7 @@ class doctor(usuario):
         
 
 
-    def despachar_paciente(self, _comentario):
-        self.ingresar_comentarios(_comentario)
+    def despachar_paciente(self):
         self.__consulta.cargar_comentarios()
         temp = usuario.get_base(self).execute(
             """
@@ -156,22 +155,7 @@ class doctor(usuario):
             return 1
 
     def obtener_historia_clinicas(self):
-        histo = False
-        docu = self.__consulta.get_documento()
-        primera_vez = 'este usuario no posee historia clinica'
-        temp = usuario.get_base(self).execute(
-            """
-            select * from paciente_historia where nro_documento = %s
-            """,
-            ([docu])
-        )
-        for i in temp:
-            if i.id_historia != None:
-                histo = True
-        if histo == True:
-            return self.__consulta.get_historia()
-        else:
-            return primera_vez
+        return self.__consulta.obtener_historia_clinina()
 
     def ingresar_comentarios(self, _comentario):
         self.__consulta.set_comentario(_comentario)
