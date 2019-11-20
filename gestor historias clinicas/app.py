@@ -27,6 +27,7 @@ def login():
             return redirect(url_for('empresa_m'))
         elif sis.iniciar_sesion(correo, contra) == 4:
             session['user'] = request.form["correo"]
+            return redirect(url_for('paciente_m'))
         elif sis.iniciar_sesion(correo, contra) == 5:
             session['user'] = request.form["correo"]
             return redirect(url_for('doctor_m'))
@@ -60,6 +61,7 @@ def recepcionista():
     global sis
     if g.user:
         return redirect(url_for('reg_recepcionista'))
+    return render_template("login.html")
         
 
 @app.route("/enfermero", methods = ["POST"])
@@ -67,6 +69,7 @@ def enfermero():
     global sis 
     if g.user:
         return redirect(url_for('reg_enfermero'))
+    return render_template("login.html")
         
 
 @app.route("/doctor", methods = ["POST"])
@@ -74,6 +77,7 @@ def doctor():
     global sis 
     if g.user:
         return redirect(url_for('reg_doctor'))
+    return render_template("login.html")
         
     
 @app.route("/empresa", methods = ["POST"])
@@ -81,18 +85,21 @@ def empresa():
     global sis 
     if g.user:
         return redirect(url_for('reg_empresa'))
+    return render_template("login.html")
 
 @app.route("/asignar", methods = ["POST"])
 def asignar():
     global sis
     if g.user:
         return redirect(url_for('asig_examenes'))
+    return render_template("login.html")
 
 @app.route("/salir_ad", methods = ["POST"])
 def salir_ad():
     global sis
     if g.user:
         return redirect(url_for('admin_m'))
+    return render_template("login.html")
 
 
 @app.route("/asig_examenes", methods = ["GET", "POST"])
@@ -105,6 +112,7 @@ def asig_examenes():
             else:
                 return redirect(url_for('admin_m'))
         return render_template("asignar_examen.html")
+    return render_template("login.html")
 
 
 
@@ -127,6 +135,7 @@ def reg_recepcionista():
             else:
                 return redirect(url_for('reg_recepcionista'))
         return render_template("R_recepcionista.html")
+    return render_template("login.html")
 
 @app.route("/reg_enfermero", methods = ["GET", "POST"])
 def reg_enfermero():
@@ -146,6 +155,7 @@ def reg_enfermero():
             else:
                 return redirect(url_for('reg_enfermero'))
         return render_template("R_enfermero.html")
+    return render_template("login.html")
 
 @app.route("/reg_doctor", methods = ["GET", "POST"])
 def reg_doctor():
@@ -167,6 +177,7 @@ def reg_doctor():
             else:
                 return redirect(url_for('reg_doctor'))
         return render_template("R_doctor.html")
+    return render_template("login.html")
 
 @app.route("/reg_empresa", methods = ["GET", "POST"])
 def reg_empresa():
@@ -180,6 +191,7 @@ def reg_empresa():
             else:
                 return redirect(url_for('reg_empresa'))
         return render_template("R_empresa.html")
+    return render_template("login.html")
 
 
 
@@ -201,6 +213,7 @@ def doctor_m():
             else:
                 redirect(url_for('doctor_m'))
         return render_template("doctor.html")
+    return render_template("login.html")
 
 
 @app.route("/atender", methods = ["GET", "POST"])
@@ -215,6 +228,7 @@ def atender():
                 return redirect(url_for('atender'))
         his = sis.mostrar_historia_doctor()
         return render_template("atencion.html", historias = his)
+    return render_template("login.html")
 
 @app.route("/agendar_examen", methods = ["GET", "POST"])
 def agendar_examen():
@@ -233,6 +247,7 @@ def agendar_examen():
                 else:
                     return redirect(url_for('agendar_examen'))
         return render_template("examen_doctor.html")
+    return render_template("login.html")
 
 
 
@@ -248,6 +263,7 @@ def enfermero_m():
             else:
                 redirect(url_for('enfermero_m'))
         return render_template("enfermero.html")
+    return render_template("login.html")
 
 
 @app.route("/atender_examen",  methods = ["GET", "POST"])
@@ -263,6 +279,7 @@ def atender_examen():
                 return redirect(url_for('atender_examen'))
         his = sis.mostrar_historia_enfermero()
         return render_template("atencion_examen.html", historias = his)
+    return render_template("login.html")
 
 
 
@@ -285,18 +302,21 @@ def empre_paciente():
     global sis
     if g.user:
         return redirect(url_for('regi_paciente'))
+    return render_template("login.html")
 
 @app.route("/empre_consulta", methods = ["POST"])
 def empre_cconsulta():
     global sis
     if g.user:
         return redirect(url_for('consu_general'))
+    return render_template("login.html")
 
 @app.route("/empre_examen", methods = ["POST"])
 def empre_examen():
     global sis
     if g.user:
         return redirect(url_for('exam_empre'))
+    return render_template("login.html")
 
 @app.route("/regi_paciente", methods = ["GET", "POST"])
 def regi_paciente():
@@ -316,6 +336,7 @@ def regi_paciente():
             else:
                 return redirect(url_for('regi_paciente'))
         return render_template("R_paciente.html")
+    return render_template("login.html")
 
 
 @app.route("/consu_general", methods = ["GET", "POST"])
@@ -333,6 +354,7 @@ def consu_general():
             else:
                 return redirect(url_for('consu_general'))
         return render_template("consulta_empresa.html")
+    return render_template("login.html")
 
 
 @app.route("/exam_empre", methods = ["GET", "POST"])
@@ -351,6 +373,7 @@ def exam_empre():
             else:
                 return redirect(url_for('exam_empre'))
         return render_template("examen_empresa.html")
+    return render_template("login.html")
 
 
 
@@ -369,12 +392,14 @@ def recep_paciente():
     global sis
     if g.user:
         return redirect(url_for('regil_paciente'))
+    return render_template("login.html")
 
 @app.route("/recep_consulta", methods = ["POST"])
 def recep_consulta():
     global sis
     if g.user:
         return redirect(url_for('consul_general'))
+    return render_template("login.html")
 
 @app.route("/regil_paciente", methods = ["GET", "POST"])
 def regil_paciente():
@@ -394,6 +419,7 @@ def regil_paciente():
             else:
                 return redirect(url_for('regil_paciente'))
         return render_template("R_paciente2.html")
+    return render_template("login.html")
 
 @app.route("/consul_general", methods = ["GET", "POST"])
 def consul_general():
@@ -410,9 +436,17 @@ def consul_general():
             else:
                 return redirect(url_for('consul_general'))
         return render_template("consulta_recep.html")
+    return render_template("login.html")
 
 
-
+#rutas paciente
+@app.route("/paciente_m")
+def paciente_m():
+    global sis
+    if g.user:
+        his = sis.obtener_historia_paciente_()
+        return render_template("paciente.html", historias = his)
+    return render_template("login.html")
 
 
 
