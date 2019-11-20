@@ -30,6 +30,7 @@ def login():
             return redirect(url_for('doctor_m'))
         elif sis.iniciar_sesion(correo, contra) == 6:
             session['user'] = request.form["correo"]
+            return redirect(url_for('enfermero_m'))
         else:
             return redirect(url_for('login'))
     return render_template("login.html")
@@ -230,6 +231,39 @@ def agendar_examen():
                 else:
                     return redirect(url_for('agendar_examen'))
         return render_template("examen_doctor.html")
+
+
+
+
+#rutas enfermero
+@app.route("/enfermero_m", methods = ["GET", "POST"])
+def enfermero_m():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            if sis.llamar_paciente_enfermero() == 1:
+                return redirect(url_for('atender_examen'))
+            else:
+                redirect(url_for('enfermero_m'))
+        return render_template("enfermero.html")
+
+
+@app.route("/atender_examen",  methods = ["GET", "POST"])
+def atender_examen():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            come = str(request.form["resultado"])
+            if sis.ingresar_resultado(come) == 1:
+                sis.despachar_paciente_enfermero()
+                return redirect(url_for('enfermero_m'))
+            else:
+                return redirect(url_for('atender_examen'))
+        his = sis.mostrar_historia_enfermero()
+        return render_template("atencion_examen.html", historias = his)
+
+
+
 
 
 
