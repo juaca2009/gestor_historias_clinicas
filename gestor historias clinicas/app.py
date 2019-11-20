@@ -23,6 +23,7 @@ def login():
             session['user'] = request.form["correo"]
         elif sis.iniciar_sesion(correo, contra) == 3:
             session['user'] = request.form["correo"]
+            return redirect(url_for('empresa_m'))
         elif sis.iniciar_sesion(correo, contra) == 4:
             session['user'] = request.form["correo"]
         elif sis.iniciar_sesion(correo, contra) == 5:
@@ -268,6 +269,86 @@ def atender_examen():
 
 
 
+
+
+#metodos empresa
+@app.route("/empresa_m")
+def empresa_m():
+    global sis
+    if g.user:
+        return render_template("empresa.html")
+    return redirect(url_for('login'))
+
+@app.route("/empre_paciente", methods = ["POST"])
+def empre_paciente():
+    global sis
+    if g.user:
+        return redirect(url_for('regi_paciente'))
+
+@app.route("/empre_consulta", methods = ["POST"])
+def empre_cconsulta():
+    global sis
+    if g.user:
+        return redirect(url_for('consu_general'))
+
+@app.route("/empre_examen", methods = ["POST"])
+def empre_examen():
+    global sis
+    if g.user:
+        return redirect(url_for('exam_empre'))
+
+@app.route("/regi_paciente", methods = ["GET", "POST"])
+def regi_paciente():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            fecha = str(request.form["fecha_nacimiento"])
+            if fecha != '':
+                dt = datetime.strptime(fecha, '%Y-%m-%d')
+                d = dt.date()
+                tele = int(str(request.form["telefono"]))
+                docu = int(str(request.form["documento"]))
+                if sis.registrar_paciente(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
+                    return redirect(url_for('empresa_m'))
+                else:
+                    return redirect(url_for('regi_paciente'))
+            else:
+                return redirect(url_for('regi_paciente'))
+        return render_template("R_paciente.html")
+
+
+@app.route("/consu_general", methods = ["GET", "POST"])
+def consu_general():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            docu = int(str(request.form["consulta_empresa"]))
+            if docu != '':
+                if sis.agendar_consulta_general_empresa() == 1:
+                    return redirect(url_for('empresa_m'))
+                else:
+                    return redirect(url_for('consu_general'))
+            else:
+                return redirect(url_for('consu_general'))
+        return render_template("consulta_empresa.html")
+
+
+@app.route("/exam_empre", methods = ["GET", "POST"])
+def exam_empre():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            ex = str(request.form["examen"])
+            docus = str(request.form["documento"])
+            if ex != '' and docu != '':
+                docu = int(docus)
+                if sis.agendar_examen_empresa(ex, docu) == 1:
+                    return redirect(url_for('empresa_m'))
+                else:
+                    return redirect(url_for('exam_empre'))
+            else:
+                return redirect(url_for('exam_empre'))
+        return render_template("examen_empresa.html")
 
 
 
