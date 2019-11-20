@@ -516,15 +516,8 @@ class sistema(object):
 
 
 
-    def despachar_paciente_doctor(self, _comentario):
-        if _comentario != None:
-            if type(_comentario) is str:
-                self.__doctor.despachar_paciente(_comentario)
-                return 1
-            else:
-                return 0
-        else:
-            return 0 
+    def despachar_paciente_doctor(self):
+        self.__doctor.despachar_paciente()
 
 
     def mostrar_historia_doctor(self):
@@ -532,22 +525,30 @@ class sistema(object):
 
     def agendar_examen_doctor(self, _tipo_examen):
         examen = False
-        if _tipo_examen != None:
-            if type(_tipo_examen) is str:
-                temp = self.__base.get_sesion().execute(
-                    """
-                    select * from asignacion_examenes where tipo_examen = %s
-                    """,
-                    ([_tipo_examen])
-                )
-                for i in temp:
-                    if i.tipo_examen != None:
-                        examen = True
-                if examen == True:
-                    self.__doctor.agendar_examen(_tipo_examen)
-                    return 1
-                else:
-                    return 0
+        if type(_tipo_examen) is str:
+            temp = self.__base.get_sesion().execute(
+                """
+                select * from asignacion_examenes where tipo_examen = %s
+                """,
+                ([_tipo_examen])
+            )
+            for i in temp:
+                if i.tipo_examen != None:
+                    examen = True
+            if examen == True:
+                self.__doctor.agendar_examen(_tipo_examen)
+                return 1
+            else:
+                return 0
+        else:
+            return 0
+        
+
+    def ingresar_comentario(self, _comentario):
+        if _comentario != None or _comentario != '':
+            if type(_comentario) is str:
+                self.__doctor.ingresar_comentarios(_comentario)
+                return 1
             else:
                 return 0
         else:
