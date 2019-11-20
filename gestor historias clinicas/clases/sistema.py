@@ -482,16 +482,19 @@ class sistema(object):
     def mostrar_historia_enfermero(self):
         return self.__enfermero.obtener_historia_clinicas()
 
-    def despachar_paciente_enfermero(self, _comentario):
-        if _comentario != None:
+    def despachar_paciente_enfermero(self):
+        self.__enfermero.despachar_paciente()
+    
+    def ingresar_resultado(self, _comentario):
+        if _comentario != None or _comentario != '':
             if type(_comentario) is str:
-
-                self.__enfermero.despachar_paciente(_comentario)
+                self.__enfermero.ingresar_comentarios(_comentario)
                 return 1
             else:
                 return 0
         else:
-            return 0 
+            return 0
+
 
 
 
