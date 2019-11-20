@@ -27,6 +27,7 @@ def login():
             session['user'] = request.form["correo"]
         elif sis.iniciar_sesion(correo, contra) == 5:
             session['user'] = request.form["correo"]
+            return redirect(url_for('doctor_m'))
         elif sis.iniciar_sesion(correo, contra) == 6:
             session['user'] = request.form["correo"]
         else:
@@ -180,6 +181,55 @@ def reg_empresa():
 
 
 
+
+
+
+
+
+
+#rutas doctor
+@app.route("/doctor_m", methods = ["GET", "POST"])
+def doctor_m():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            if sis.llamar_paciente_doctor() == 1:
+                return redirect(url_for('atender'))
+            else:
+                redirect(url_for('doctor_m'))
+        return render_template("doctor.html")
+
+
+@app.route("/atender", methods = ["GET", "POST"])
+def atender():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            come = str(request.form["comentario"])
+            if sis.ingresar_comentario(come) == 1:
+                return redirect(url_for('agendar_examen'))
+            else:
+                return redirect(url_for('atender'))
+        his = sis.mostrar_historia_doctor()
+        return render_template("atencion.html", historias = his)
+
+@app.route("/agendar_examen", methods = ["GET", "POST"])
+def agendar_examen():
+    global sis
+    exam = None
+    if g.user:
+        if request.method == "POST":
+            exam = str(request.form["examen_doctor"])
+            if exam == None or exam == '':
+                sis.despachar_paciente_doctor()
+                return redirect(url_for('doctor_m'))
+            else:
+                if sis.agendar_examen_doctor(exam) == 1:
+                    sis.despachar_paciente_doctor()
+                    return redirect(url_for('doctor_m'))
+                else:
+                    return redirect(url_for('agendar_examen'))
+        return render_template("examen_doctor.html")
 
 
 
