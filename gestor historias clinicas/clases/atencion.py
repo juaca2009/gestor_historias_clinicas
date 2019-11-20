@@ -51,6 +51,8 @@ class atencion(object):
         return self.__documento
 
     def obtener_historia_clinina(self):
+        lis = list()
+        lis2 = list()
         temp = self.__base.execute(
             """
             select id_historia, apellido_doctor, apellido_enfermero, 
@@ -61,25 +63,15 @@ class atencion(object):
             ([self.get_documento()])
         )
         for i in temp:
-            self.__historia_clinica = 'nro historia:' + ' ' + str(i.id_historia)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'nombre doctor:' + ' ' + str(i.nombre_doctor)
-            self.__historia_clinica = self.__historia_clinica + " /n"
-            self.__historia_clinica = self.__historia_clinica + 'apellido doctor:' + ' ' + str(i.apellido_doctor)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'especialidad:' + ' ' + str(i.especialidad)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'nombre enfermero:' + ' ' + str(i.nombre_enfermero)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'apellido enfermero:' + ' ' + str(i.apellido_enfermero)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'fecha:' + ' ' + str(i.fecha)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'tipo examen:' + ' ' + str(i.tipo_examen)
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + 'comentarios/resultados:' + ' ' + str(i.comentarios) 
-            self.__historia_clinica = self.__historia_clinica + '/n'
-            self.__historia_clinica = self.__historia_clinica + '====================================================================================================================='
+            lis.append(i.id_historia)
+            lis.append(i.fecha)
+            lis.append(i.especialidad)
+            lis.append(i.tipo_examen)
+            lis.append(i.comentarios)
+            lis2.append(lis)
+            lis = list()
+        return lis2
+
 
 
 
