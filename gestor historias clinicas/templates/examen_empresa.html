@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hermess Clinics</title>
+		<link href="../static/css/login.css" rel="stylesheet" type="text/css">
+
+	</head>
+	<body>
+		<div id="login-box">
+			<div class="left-box">
+				<form method="POST" action="{{ url_for('exam_empre') }}">
+					<h1> asignar examen </h1>
+					<input type="text" name="examen" placeholder="examen"/>
+					<input type="text" name="documento" placeholder="documento"/>
+					<button class="btn" type="submit">asignar</button>
+				</form>		
+			</div>
+
+			<div class="right-box">
+				<div class="logo">
+					<img src="../static/imagenes/HC.png">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
