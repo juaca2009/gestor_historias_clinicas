@@ -621,7 +621,9 @@ class sistema(object):
 
 
 
-
+#metoodos paciente
+    def obtener_historia_paciente_(self):
+        return self.__paciente.obtener_historia_paciente()
 
 
 
