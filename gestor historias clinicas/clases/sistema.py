@@ -567,6 +567,66 @@ class sistema(object):
 
 
 
+
+
+
+
+#metodos recepcionista
+    def agendar_consulta_recepcionista(self, _ndocumento):
+        existe = False
+        if _ndocumento != None:
+            if type(_ndocumento) is int:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento == _ndocumento and i.rol == 'paciente':
+                        existe = True
+                if existe == True:
+                    self.__recepcionista.agendar_consulta_general(_ndocumento)
+                    return 1
+                else:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+    def agregar_paciente(self, _nombre, _apellido, _fechan, _ciudad, _direccion,
+                            _tdocumento, _ndocumento, _ntelefono, _correo):
+        if _nombre != None and _apellido != None and _fechan != None and _ciudad != None and _direccion != None and _tdocumento != None and _ndocumento  != None and _ntelefono != None and _correo != None:
+            if type(_nombre) is str and type(_apellido) is str and type(_ciudad) is str and type(_direccion) is str and type(_tdocumento) is str and type(_ndocumento) is int and type(_ntelefono) is int and type(_correo) is str:
+                temp = self.__base.get_sesion().execute(
+                    """
+                    select * from login where nro_documento = %s
+                    """,
+                    ([_ndocumento])
+                )
+                for i in temp:
+                    if i.nro_documento != None:
+                        return 0 
+                if self.verificar_correo(_correo) == True:
+                    self.__recepcionista.registrar_paciente(_nombre, _apellido, _fechan, _ciudad, _direccion,
+                                                  _tdocumento, _ndocumento, _ntelefono, _correo)
+                    return 1
+                return 0
+            else:
+                return 0
+        else:
+            return 0
+
+
+
+
+
+
+
+
+
 # a = sistema()
 # print(a.get_asignacion_examenes())
 # a.iniciar_sesion('camia177@gmail.com', '2sd44f6h')
