@@ -21,6 +21,7 @@ def login():
             return redirect(url_for('admin_m'))
         elif sis.iniciar_sesion(correo, contra) == 2:
             session['user'] = request.form["correo"]
+            return redirect(url_for('recepcionista_m'))
         elif sis.iniciar_sesion(correo, contra) == 3:
             session['user'] = request.form["correo"]
             return redirect(url_for('empresa_m'))
@@ -322,9 +323,10 @@ def consu_general():
     global sis
     if g.user:
         if request.method == "POST":
-            docu = int(str(request.form["consulta_empresa"]))
-            if docu != '':
-                if sis.agendar_consulta_general_empresa() == 1:
+            docus = str(request.form["consulta_empresa"])
+            if docus != '':
+                docu = int(docus)
+                if sis.agendar_consulta_general_empresa(docu) == 1:
                     return redirect(url_for('empresa_m'))
                 else:
                     return redirect(url_for('consu_general'))
@@ -352,6 +354,62 @@ def exam_empre():
 
 
 
+
+
+
+@app.route("/recepcionista_m")
+def recepcionista_m():
+    global sis
+    if g.user:
+        return render_template("recepcionista.html")
+    return redirect(url_for('login'))
+
+@app.route("/recep_paciente", methods = ["POST"])
+def recep_paciente():
+    global sis
+    if g.user:
+        return redirect(url_for('regil_paciente'))
+
+@app.route("/recep_consulta", methods = ["POST"])
+def recep_consulta():
+    global sis
+    if g.user:
+        return redirect(url_for('consul_general'))
+
+@app.route("/regil_paciente", methods = ["GET", "POST"])
+def regil_paciente():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            fecha = str(request.form["fecha_nacimiento"])
+            if fecha != '':
+                dt = datetime.strptime(fecha, '%Y-%m-%d')
+                d = dt.date()
+                tele = int(str(request.form["telefono"]))
+                docu = int(str(request.form["documento"]))
+                if sis.registrar_paciente(str(request.form["nombre"]), str(request.form["apellido"]), d, str(request.form["ciudad"]), str(request.form["direccion"]), str(request.form["tipo_documento"]), docu, tele, str(request.form["correo"])) == 1:
+                    return redirect(url_for('recepcionista_m'))
+                else:
+                    return redirect(url_for('regil_paciente'))
+            else:
+                return redirect(url_for('regil_paciente'))
+        return render_template("R_paciente2.html")
+
+@app.route("/consul_general", methods = ["GET", "POST"])
+def consul_general():
+    global sis
+    if g.user:
+        if request.method == "POST":
+            docus = str(request.form["consulta_empresa"])
+            if docus != '':
+                docu = int(docus)
+                if sis.agendar_consulta_general_empresa(docu) == 1:
+                    return redirect(url_for('recepcionista_m'))
+                else:
+                    return redirect(url_for('consul_general'))
+            else:
+                return redirect(url_for('consul_general'))
+        return render_template("consulta_recep.html")
 
 
 
