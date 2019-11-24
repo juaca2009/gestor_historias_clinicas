@@ -94,12 +94,6 @@ def asignar():
         return redirect(url_for('asig_examenes'))
     return render_template("login.html")
 
-@app.route("/salir_ad", methods = ["POST"])
-def salir_ad():
-    global sis
-    if g.user:
-        return redirect(url_for('admin_m'))
-    return render_template("login.html")
 
 
 @app.route("/asig_examenes", methods = ["GET", "POST"])
@@ -364,7 +358,7 @@ def exam_empre():
         if request.method == "POST":
             ex = str(request.form["examen"])
             docus = str(request.form["documento"])
-            if ex != '' and docu != '':
+            if ex != '' and docus != '':
                 docu = int(docus)
                 if sis.agendar_examen_empresa(ex, docu) == 1:
                     return redirect(url_for('empresa_m'))

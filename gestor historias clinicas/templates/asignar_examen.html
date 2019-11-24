@@ -8,16 +8,12 @@
 	<body>
 		<div id="login-box">
 			<div class="left-box">
-				<form method="POST" action="">
+				<form method="POST" action="{{ url_for('asig_examenes') }}">
 					<h1> asignar examen </h1>
 					<input type="text" name="examen" placeholder="examen"/>
 					<input type="text" name="documento" placeholder="documento"/>
 					<button class="btn" type="submit">asignar</button>
-				</form>
-				<form method="POST" action="{{ url_for('salir_ad') }}">
-					<button class="btn" type="submit">volver</button>
-				</form>
-					
+				</form>	
 			</div>
 
 			<div class="right-box">
