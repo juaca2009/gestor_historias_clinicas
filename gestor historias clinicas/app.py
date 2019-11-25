@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, g, url_for
+from flask import Flask, render_template, request, redirect, session, g, url_for, flash
 import os
 from clases.sistema import sistema
 from datetime import datetime
@@ -35,6 +35,7 @@ def login():
             session['user'] = request.form["correo"]
             return redirect(url_for('enfermero_m'))
         else:
+            flash('correo o contrasena erroneos')
             return redirect(url_for('login'))
     return render_template("login.html")
 
